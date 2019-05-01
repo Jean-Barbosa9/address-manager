@@ -7,7 +7,7 @@
 
 <script>
 // Components importings
-import Header from "./components/Header";
+import Header from "./components/layouts/Header";
 import NewAddress from "./components/NewAddress";
 
 export default {
