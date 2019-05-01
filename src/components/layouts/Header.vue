@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <img class="logo" alt="Vue logo" src="../assets/logo.png">
+    <img class="logo" alt="Vue logo" src="../../assets/logo.png">
     <h1 class="title">Gerenciador de Endereços</h1>
   </header>
 </template>
