@@ -1,15 +1,16 @@
 <template>
-  <div class="address-form">
-    <form class="form" @submit="sendAddress">
+  <div class="address-form form" v-bind:usage="usage">
+    <form class="form__get" @submit="leftZeros">
       <div class="form__group">
         <label for="zipCode" class="form__label form__label--required">
           CEP:
           <span>*</span>
         </label>
         <input
+          id="zipCode"
           type="text"
           class="form__input"
-          placeholder="Informe somente os dígitos, ex.: 00000000"
+          placeholder="ex.: 00000000"
           maxlength="8"
           pattern="[0-9\-]*"
           required="required"
@@ -26,29 +27,37 @@
         >Não sei meu cep</a>
         <span class="error-message" v-if="errorMessage.length">{{ errorMessage }}</span>
       </div>
-      <button type="button" v-on:click="leftZeros()">Buscar CEP</button>
+      <button type="submit" v-on:click="leftZeros">Buscar CEP</button>
+    </form>
+    <form class="form__send" @submit="sendAddress">
       <div class="form__group form__group--complete-address" v-if="addressFound">
         <div class="form__group form__group--flex">
           <div class="form__group">
             <label for="city" class="form__label">Cidade:</label>
-            <input name="city" type="text" class="form__input" v-model="city">
+            <input name="city" type="text" class="form__input" v-model="city" required="required">
           </div>
           <div class="form__group">
             <label for="state" class="form__label">Estado:</label>
-            <input name="state" type="text" class="form__input" v-model="state">
+            <input name="state" type="text" class="form__input" v-model="state" required="required">
           </div>
         </div>
         <div class="form__group">
           <label for="neighborhood" class="form__label">Bairro:</label>
-          <input type="text" class="form__input" name="neighborhood" v-model="neighborhood">
+          <input
+            type="text"
+            class="form__input"
+            name="neighborhood"
+            v-model="neighborhood"
+            required="required"
+          >
         </div>
         <div class="form__group">
           <label for="street" class="form__label">Logradouro:</label>
-          <input type="text" class="form__input" name="street" v-model="street">
+          <input type="text" class="form__input" name="street" v-model="street" required="required">
         </div>
         <div class="form__group">
           <label for="number" class="form__label">Número:</label>
-          <input type="number" class="form__input" name="number" v-model="number">
+          <input type="text" class="form__input" name="number" v-model="number" required="required">
         </div>
         <div class="form__group">
           <label for="complement" class="form__label">Complemento:</label>
@@ -63,6 +72,7 @@
 <script>
 export default {
   name: "AddressForm",
+  props: ["usage"],
   data() {
     return {
       addressFound: false,
@@ -105,8 +115,8 @@ export default {
       }
     },
 
-    leftZeros() {
-      console.log(this);
+    leftZeros(e) {
+      e.preventDefault();
       for (var i = 0, len = 8 - this.zipCode.length; i < len; i++) {
         this.zipCode = "0" + this.zipCode;
       }
@@ -126,7 +136,11 @@ export default {
         complement: this.complement
       };
 
-      this.$emit("add-address", newAddress);
+      this.$emit(this.usage, newAddress);
+
+      document.querySelectorAll("form").reset();
+      this.addressFound = false;
+      document.querySelector("#zipCode").focus();
     }
   }
 };

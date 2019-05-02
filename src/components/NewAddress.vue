@@ -1,6 +1,6 @@
 <template>
   <div class="add-address">
-    <AddressForm v-on:add-address="addNewAddress"/>
+    <AddressForm usage="new-address" v-on:new-address="addNewAddress"/>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     addNewAddress(address) {
-      console.log(address);
+      this.$emit("new-address", address);
     }
   }
 };
