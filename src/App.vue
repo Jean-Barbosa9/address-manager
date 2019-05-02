@@ -49,6 +49,12 @@ body {
   box-shadow: 0 0 20px;
 }
 
+.form__group--flex {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 @media screen and (min-width: 1025px) {
   .title {
     font-size: 1.5em;
