@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <div class="address-manager">
     <Header/>
-    <NewAddress/>
+    <div class="container">
+      <NewAddress v-on:new-address="addNewAddress"/>
+      <Addresses v-bind:addresses="addresses"/>
+    </div>
   </div>
 </template>
 
@@ -9,12 +12,61 @@
 // Components importings
 import Header from "./components/layouts/Header";
 import NewAddress from "./components/NewAddress";
+import Addresses from "./components/Addresses";
 
 export default {
   name: "app",
   components: {
     Header,
-    NewAddress
+    NewAddress,
+    Addresses
+  },
+  data() {
+    return {
+      addresses: [
+        {
+          id: 1,
+          zipCode: "20231050",
+          city: "Rio de Janeiro",
+          state: "RJ",
+          street: "Rua André Cavalcanti",
+          neighborhood: "Centro",
+          number: "171",
+          complement: "Sobrado"
+        },
+        {
+          id: 2,
+          zipCode: "01001000",
+          city: "São Paulo",
+          state: "SP",
+          street: "Avenida Paulista",
+          neighborhood: "Centro",
+          number: "4000",
+          complement: "Bloco 1 Sl 302"
+        },
+        {
+          id: 3,
+          zipCode: "20535220",
+          city: "Rio de Janeiro",
+          state: "RJ",
+          street: "Rua Jair Caldas Corrêa",
+          neighborhood: "Alto da Boa Vista",
+          number: "5",
+          complement: "Casa"
+        }
+      ]
+    };
+  },
+  methods: {
+    addNewAddress(address) {
+      // Verificar se o CEP que está sendo inserido já existe. Caso positivo, retornar mensagem perguntando se deseja atualizar o endereço existente
+
+      // Instalar uuid para melhorar a criação de ids
+      const newId = this.addresses[this.addresses.length - 1].id++;
+      address.id = newId;
+
+      this.addresses.unshift(address);
+    }
   }
 };
 </script>
