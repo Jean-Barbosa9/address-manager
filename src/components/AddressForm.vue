@@ -1,5 +1,5 @@
 <template>
-  <div class="address-form">
+  <div class="address-form" v-bind:usage="usage">
     <form class="form" @submit="sendAddress">
       <div class="form__group">
         <label for="zipCode" class="form__label form__label--required">
@@ -63,6 +63,7 @@
 <script>
 export default {
   name: "AddressForm",
+  props: ["usage"],
   data() {
     return {
       addressFound: false,
@@ -126,7 +127,7 @@ export default {
         complement: this.complement
       };
 
-      this.$emit("add-address", newAddress);
+      this.$emit(this.usage, newAddress);
     }
   }
 };
