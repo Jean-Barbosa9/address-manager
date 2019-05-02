@@ -1,6 +1,6 @@
 <template>
   <div class="add-address">
-    <AddressForm v-on:add-address="addNewAddress"/>
+    <AddressForm usage="new-address" v-on:add-address="addNewAddress"/>
   </div>
 </template>
 
