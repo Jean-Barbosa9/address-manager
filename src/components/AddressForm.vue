@@ -1,19 +1,20 @@
 <template>
-  <div class="address-form form" v-bind:usage="usage">
-    <form class="form__get" @submit="leftZeros">
-      <div class="form__group">
-        <label for="zipCode" class="form__label form__label--required">
+  <div class="address-form" v-bind:usage="usage">
+    <form class="mb-3" @submit="leftZeros" ref="getForm">
+      <div class="form-group row px-3 align-items-center">
+        <label class="font-weight-bold" for="zipCode">
           CEP:
-          <span>*</span>
+          <span class="text-danger">*</span>
         </label>
         <input
           id="zipCode"
           type="text"
-          class="form__input"
+          class="form-control col-sm mx-2"
           placeholder="ex.: 00000000"
           maxlength="8"
           pattern="[0-9\-]*"
           required="required"
+          ref="zipCode"
           v-model="zipCode"
           v-on:input="isFullfilled()"
           autofocus
@@ -21,50 +22,62 @@
         <a
           href="http://www.buscacep.correios.com.br/sistemas/buscacep/"
           title="Descubra seu CEP clicando aqui"
-          class="form__link"
+          class="form-link"
           rel="noreferrer noopener"
           target="_blank"
         >Não sei meu cep</a>
-        <span class="error-message" v-if="errorMessage.length">{{ errorMessage }}</span>
       </div>
-      <button type="submit" v-on:click="leftZeros">Buscar CEP</button>
+      <span
+        class="form-text text-danger error-message"
+        v-if="errorMessage.length"
+      >{{ errorMessage }}</span>
+      <button type="submit" class="btn btn-block btn-secondary" v-on:click="leftZeros">Buscar CEP</button>
     </form>
-    <form class="form__send" @submit="sendAddress">
-      <div class="form__group form__group--complete-address" v-if="addressFound">
-        <div class="form__group form__group--flex">
-          <div class="form__group">
-            <label for="city" class="form__label">Cidade:</label>
-            <input name="city" type="text" class="form__input" v-model="city" required="required">
-          </div>
-          <div class="form__group">
-            <label for="state" class="form__label">Estado:</label>
-            <input name="state" type="text" class="form__input" v-model="state" required="required">
-          </div>
-        </div>
-        <div class="form__group">
-          <label for="neighborhood" class="form__label">Bairro:</label>
-          <input
-            type="text"
-            class="form__input"
-            name="neighborhood"
-            v-model="neighborhood"
-            required="required"
-          >
-        </div>
-        <div class="form__group">
-          <label for="street" class="form__label">Logradouro:</label>
-          <input type="text" class="form__input" name="street" v-model="street" required="required">
-        </div>
-        <div class="form__group">
-          <label for="number" class="form__label">Número:</label>
-          <input type="text" class="form__input" name="number" v-model="number" required="required">
-        </div>
-        <div class="form__group">
-          <label for="complement" class="form__label">Complemento:</label>
-          <input type="text" class="form__input" name="complement" v-model="complement">
-        </div>
-        <button class="form__submit" type="submit">Criar novo endereço</button>
+    <form @submit="sendAddress" v-if="addressFound" ref="sendForm">
+      <div class="form-group">
+        <label for="contact" class="font-weight-bold">Contato:</label>
+        <input
+          ref="contact"
+          name="contact"
+          type="text"
+          class="form-control"
+          v-model="contact"
+          required="required"
+        >
       </div>
+      <div class="row">
+        <div class="form-group col-sm">
+          <label for="city" class="font-weight-bold">Cidade:</label>
+          <input name="city" type="text" class="form-control" v-model="city" required="required">
+        </div>
+        <div class="form-group col-sm">
+          <label for="state" class="font-weight-bold">Estado:</label>
+          <input name="state" type="text" class="form-control" v-model="state" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="neighborhood" class="font-weight-bold">Bairro:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="neighborhood"
+          v-model="neighborhood"
+          required="required"
+        >
+      </div>
+      <div class="form-group">
+        <label for="street" class="font-weight-bold">Logradouro:</label>
+        <input type="text" class="form-control" name="street" v-model="street" required="required">
+      </div>
+      <div class="form-group">
+        <label for="number" class="font-weight-bold">Número:</label>
+        <input type="text" class="form-control" name="number" v-model="number" required="required">
+      </div>
+      <div class="form-group">
+        <label for="complement" class="font-weight-bold">Complemento:</label>
+        <input type="text" class="form-control" name="complement" v-model="complement">
+      </div>
+      <button class="btn btn btn-block btn-primary" type="submit">Criar novo endereço</button>
     </form>
   </div>
 </template>
@@ -77,6 +90,7 @@ export default {
     return {
       addressFound: false,
       errorMessage: "",
+      contact: "",
       zipCode: "",
       state: "",
       city: "",
@@ -98,6 +112,7 @@ export default {
             this.state = uf;
             this.neighborhood = bairro;
             this.street = logradouro;
+            return address;
           } else {
             this.errorMessage =
               "Desculpe, não foi possível encontrar esse CEP. Por favor, verifique o número digitado e tente novamente.";
@@ -105,6 +120,9 @@ export default {
               this.errorMessage = "";
             }, 5000);
           }
+        })
+        .then(address => {
+          if (!address.erro) this.$refs.contact.focus();
         })
         .catch(console.error);
     },
@@ -127,6 +145,7 @@ export default {
       e.preventDefault();
 
       const newAddress = {
+        contact: this.contact,
         zipCode: this.zipCode,
         state: this.state,
         city: this.city,
@@ -138,9 +157,11 @@ export default {
 
       this.$emit(this.usage, newAddress);
 
-      document.querySelectorAll("form").reset();
+      // resetting form to initial state
+      this.zipCode = this.state = this.city = this.neighborhood = this.street = this.number = this.complemen =
+        "";
       this.addressFound = false;
-      document.querySelector("#zipCode").focus();
+      this.$refs.zipCode.focus();
     }
   }
 };
@@ -149,7 +170,7 @@ export default {
 <style scoped>
 .error-message {
   display: block;
-  max-width: 300px;
+  margin-bottom: 20px;
   font-size: 12px;
   color: red;
 }
