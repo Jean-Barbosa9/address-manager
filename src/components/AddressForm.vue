@@ -35,13 +35,13 @@
     </form>
     <form @submit="sendAddress" v-if="addressFound" ref="sendForm">
       <div class="form-group">
-        <label for="contact" class="font-weight-bold">Contato:</label>
+        <label for="title" class="font-weight-bold">Título:</label>
         <input
-          ref="contact"
-          name="contact"
+          ref="title"
+          name="title"
           type="text"
           class="form-control"
-          v-model="contact"
+          v-model="title"
           required="required"
         >
       </div>
@@ -90,7 +90,7 @@ export default {
     return {
       addressFound: false,
       errorMessage: "",
-      contact: "",
+      title: "",
       zipCode: "",
       state: "",
       city: "",
@@ -122,7 +122,7 @@ export default {
           }
         })
         .then(address => {
-          if (!address.erro) this.$refs.contact.focus();
+          if (!address.erro) this.$refs.title.focus();
         })
         .catch(console.error);
     },
@@ -145,7 +145,7 @@ export default {
       e.preventDefault();
 
       const newAddress = {
-        contact: this.contact,
+        title: this.title,
         zipCode: this.zipCode,
         state: this.state,
         city: this.city,
@@ -158,7 +158,7 @@ export default {
       this.$emit(this.usage, newAddress);
 
       // resetting form to initial state
-      this.zipCode = this.state = this.city = this.neighborhood = this.street = this.number = this.complemen =
+      this.title = this.zipCode = this.state = this.city = this.neighborhood = this.street = this.number = this.complemen =
         "";
       this.addressFound = false;
       this.$refs.zipCode.focus();
