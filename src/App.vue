@@ -33,7 +33,7 @@ export default {
       addresses: [
         {
           id: 3,
-          contact: "Shopping Rio Sul",
+          title: "Shopping Rio Sul",
           zipCode: "22290070",
           city: "Rio de Janeiro",
           state: "RJ",
@@ -44,7 +44,7 @@ export default {
         },
         {
           id: 2,
-          contact: "Shopping Tijuca",
+          title: "Shopping Tijuca",
           zipCode: "20511000",
           city: "Rio de Janeiro",
           state: "RJ",
@@ -55,7 +55,7 @@ export default {
         },
         {
           id: 1,
-          contact: "Shopping Downtown",
+          title: "Shopping Downtown",
           zipCode: "22640904",
           city: "Rio de Janeiro",
           state: "RJ",

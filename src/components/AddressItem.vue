@@ -1,7 +1,7 @@
 <template>
   <div class="address-item card mb-4" v-bind:address="address">
     <div class="card-body" @click="showDetails">
-      <strong>{{address.contact}}</strong>
+      <strong>{{address.title}}</strong>
       <i class="fas posar" v-bind:class="{'fa-chevron-down':!show,'fa-chevron-up':show}"/>
       <br>
       <span class="address-details" v-if="show">
