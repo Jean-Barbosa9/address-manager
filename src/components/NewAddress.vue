@@ -1,6 +1,7 @@
 <template>
-  <div class="add-address">
-    <AddressForm usage="new-address" v-on:new-address="addNewAddress"/>
+  <div class="add-address card my-5">
+    <h3 class="card-header title-2">Adicione novos endereços:</h3>
+    <AddressForm class="card-body" usage="new-address" v-on:new-address="addNewAddress"/>
   </div>
 </template>
 
