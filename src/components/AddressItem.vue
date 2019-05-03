@@ -12,8 +12,16 @@
         {{address.city}} / {{address.state}}
         <br>
         <div class="btn-group float-right">
-          <i class="fas fa-edit btn btn-primary" @click="$emit('edit-address',address.id)"></i>
-          <i class="fas fa-trash-alt btn btn-danger" @click="$emit('delete-address',address.id)"></i>
+          <i
+            class="fas fa-edit btn btn-primary"
+            v-bind:title="'Editar ' + address.title"
+            @click="$emit('open-editing',address)"
+          ></i>
+          <i
+            class="fas fa-trash-alt btn btn-danger"
+            v-bind:title="'Deletar ' + address.title"
+            @click="$emit('delete-address',address.id)"
+          ></i>
         </div>
       </span>
     </div>
