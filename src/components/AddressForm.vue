@@ -1,5 +1,5 @@
 <template>
-  <div class="address-form" v-bind:usage="usage">
+  <div class="address-form" v-bind:usage="usage" v-bind:address="address">
     <form class="mb-3" @submit="leftZeros" ref="getForm">
       <div class="form-group row px-3 align-items-center">
         <label class="font-weight-bold" for="zipCode">
@@ -83,13 +83,15 @@
 </template>
 
 <script>
+import { stat } from "fs";
 export default {
   name: "AddressForm",
-  props: ["usage"],
+  props: ["usage", "address"],
   data() {
     return {
       addressFound: false,
       errorMessage: "",
+      id: "",
       title: "",
       zipCode: "",
       state: "",
@@ -99,6 +101,20 @@ export default {
       number: null,
       complement: ""
     };
+  },
+  created() {
+    if (this.usage == "edit-address") {
+      this.addressFound = true;
+      this.id = this.address.id;
+      this.title = this.address.title;
+      this.zipCode = this.address.zipCode;
+      this.state = this.address.state;
+      this.city = this.address.city;
+      this.neighborhood = this.address.neighborhood;
+      this.street = this.address.street;
+      this.number = this.address.number;
+      this.complement = this.address.complement;
+    }
   },
   methods: {
     getAddress(zipCode) {
@@ -140,11 +156,11 @@ export default {
       }
       this.getAddress(this.zipCode);
     },
-
     sendAddress(e) {
       e.preventDefault();
 
       const newAddress = {
+        id: this.id,
         title: this.title,
         zipCode: this.zipCode,
         state: this.state,
