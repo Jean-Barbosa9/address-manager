@@ -5,7 +5,7 @@
       <div class="address col-sm" v-for="address in addresses" :key="address.id">
         <AddressItem
           v-bind:address="address"
-          v-on:edit-address="$emit('edit-address', address.id)"
+          v-on:open-editing="$emit('open-editing', address)"
           v-on:delete-address="$emit('delete-address', address.id)"
         />
       </div>
