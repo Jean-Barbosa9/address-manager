@@ -107,11 +107,12 @@ export default {
       editAddressKeys.forEach(field => (this.editAddress[field] = ""));
     },
     onEditAddress(payload) {
-      this.addresses.map(address => {
+      this.addresses = this.addresses.map(address => {
         console.log("address: ", address);
         console.log("payload: ", payload);
         return address.id === payload.id ? payload : address;
       });
+
       this.closeEditing();
     },
     deleteAddress(id) {
