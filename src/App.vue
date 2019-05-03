@@ -2,9 +2,16 @@
   <div class="address-manager">
     <Header/>
     <div class="container">
-      <NewAddress v-on:new-address="addNewAddress"/>
+      <NewAddress v-if="!isEditing" v-on:new-address="addNewAddress"/>
+      <EditAddress
+        v-if="isEditing"
+        v-bind:address="editAddress"
+        v-on:close-editing="closeEditing"
+        v-on:edit-address="onEditAddress"
+      />
       <Addresses
         v-bind:addresses="addresses"
+        v-on:open-editing="openEditing"
         v-on:edit-address="editAddress"
         v-on:delete-address="deleteAddress"
       />
@@ -16,6 +23,7 @@
 // Components importings
 import Header from "./components/layouts/Header";
 import NewAddress from "./components/NewAddress";
+import EditAddress from "./components/EditAddress";
 import Addresses from "./components/Addresses";
 
 // Using bootstrap style
@@ -26,10 +34,23 @@ export default {
   components: {
     Header,
     NewAddress,
+    EditAddress,
     Addresses
   },
   data() {
     return {
+      isEditing: false,
+      editAddress: {
+        id: "",
+        title: "",
+        zipCode: "",
+        city: "",
+        state: "",
+        street: "",
+        neighborhood: "",
+        number: "",
+        complement: ""
+      },
       addresses: [
         {
           id: 3,
@@ -76,8 +97,22 @@ export default {
       address.id = newId;
       this.addresses.unshift(address);
     },
-    editAddress(id) {
-      console.log(`criar interação na tela para edtitar o item ${id}`);
+    openEditing(address) {
+      this.isEditing = true;
+      this.editAddress = address;
+    },
+    closeEditing() {
+      this.isEditing = false;
+      let editAddressKeys = Object.keys(this.editAddress);
+      editAddressKeys.forEach(field => (this.editAddress[field] = ""));
+    },
+    onEditAddress(payload) {
+      this.addresses.map(address => {
+        console.log("address: ", address);
+        console.log("payload: ", payload);
+        return address.id === payload.id ? payload : address;
+      });
+      this.closeEditing();
     },
     deleteAddress(id) {
       console.log(this.addresses);
