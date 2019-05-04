@@ -77,7 +77,10 @@
         <label for="complement" class="font-weight-bold">Complemento:</label>
         <input type="text" class="form-control" name="complement" v-model="complement">
       </div>
-      <button class="btn btn btn-block btn-primary" type="submit">Criar novo endereço</button>
+      <div class="btn-group d-flex justify-content-center">
+        <button type="button" class="btn btn-danger col-lg" @click="closeForms">Cancelar</button>
+        <button class="btn btn-primary col-lg" type="submit">Enviar</button>
+      </div>
     </form>
   </div>
 </template>
@@ -116,6 +119,10 @@ export default {
     }
   },
   methods: {
+    closeForms() {
+      this.addressFound = false;
+      this.$emit("close-editing");
+    },
     getAddress(zipCode) {
       fetch(`https://viacep.com.br/ws/${zipCode}/json/`)
         .then(res => res.json())
