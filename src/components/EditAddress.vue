@@ -6,6 +6,7 @@
       usage="edit-address"
       v-bind:address="address"
       v-on:edit-address="editAddress"
+      v-on:close-editing="$emit('close-editing')"
     />
   </div>
 </template>
