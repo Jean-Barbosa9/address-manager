@@ -9,6 +9,11 @@
         v-on:close-editing="closeEditing"
         v-on:edit-address="onEditAddress"
       />
+      <span
+        class="alert"
+        v-if="alert.type !== null"
+        v-bind:class="{'alert-danger':alert.type == 'error', 'alert-success':alert.type == 'success',}"
+      >{{alert.message}}</span>
       <Addresses
         v-bind:addresses="addresses"
         v-on:open-editing="openEditing"
@@ -20,6 +25,9 @@
 </template>
 
 <script>
+// Dependencies
+import uuid from "uuid";
+
 // Components importings
 import Header from "./components/layouts/Header";
 import NewAddress from "./components/NewAddress";
@@ -28,6 +36,7 @@ import Addresses from "./components/Addresses";
 
 // Using bootstrap style
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import { setTimeout } from "timers";
 
 export default {
   name: "app",
@@ -39,6 +48,10 @@ export default {
   },
   data() {
     return {
+      alert: {
+        type: null,
+        message: ""
+      },
       isEditing: false,
       editAddress: {
         id: "",
@@ -88,15 +101,10 @@ export default {
       ]
     };
   },
+  created() {
+    if (localStorage.addresses) this.addresses = this.getAddresses();
+  },
   methods: {
-    addNewAddress(address) {
-      // Verificar se o CEP que está sendo inserido já existe. Caso positivo, retornar mensagem perguntando se deseja atualizar o endereço existente
-
-      // Instalar uuid para melhorar a criação de ids
-      const newId = this.addresses.length > 0 ? this.addresses[0].id + 1 : 1;
-      address.id = newId;
-      this.addresses.unshift(address);
-    },
     openEditing(address) {
       this.isEditing = true;
       this.editAddress = address;
@@ -106,18 +114,39 @@ export default {
       let editAddressKeys = Object.keys(this.editAddress);
       editAddressKeys.forEach(field => (this.editAddress[field] = ""));
     },
+    addNewAddress(address) {
+      address.id = uuid.v4();
+      this.addresses.unshift(address);
+      this.saveAddresses("Endereço adicionado com sucesso!");
+    },
     onEditAddress(payload) {
       this.addresses = this.addresses.map(address => {
-        console.log("address: ", address);
-        console.log("payload: ", payload);
         return address.id === payload.id ? payload : address;
       });
 
       this.closeEditing();
+      this.saveAddresses("Endereço editado com sucesso!");
     },
     deleteAddress(id) {
-      console.log(this.addresses);
       this.addresses = this.addresses.filter(address => address.id !== id);
+      this.saveAddresses("Endereço deletado com sucesso!");
+    },
+    getAddresses() {
+      return JSON.parse(atob(localStorage.addresses));
+    },
+    saveAddresses(message) {
+      localStorage.setItem("addresses", btoa(JSON.stringify(this.addresses)));
+      this.alert = {
+        type: "success",
+        message: message
+      };
+
+      setTimeout(() => {
+        this.alert = {
+          type: null,
+          message: ""
+        };
+      }, 2000);
     }
   }
 };
@@ -168,6 +197,15 @@ body {
 
 .title-3 {
   font-size: 0.8em;
+}
+
+.alert {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px 9999px rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 @media screen and (min-width: 440px) {
