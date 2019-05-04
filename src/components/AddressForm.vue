@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import { stat } from "fs";
 export default {
   name: "AddressForm",
   props: ["usage", "address"],
@@ -140,7 +139,9 @@ export default {
         .then(address => {
           if (!address.erro) this.$refs.title.focus();
         })
-        .catch(console.error);
+        .catch(error => {
+          throw error;
+        });
     },
 
     isFullfilled() {
