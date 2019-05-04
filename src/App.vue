@@ -17,6 +17,7 @@
       <Addresses
         v-bind:addresses="addresses"
         v-on:open-editing="openEditing"
+        v-on:close-editing="closeEditing"
         v-on:edit-address="editAddress"
         v-on:delete-address="deleteAddress"
       />
@@ -108,11 +109,10 @@ export default {
     openEditing(address) {
       this.isEditing = true;
       this.editAddress = address;
+      window.scrollTo(0, 0);
     },
     closeEditing() {
       this.isEditing = false;
-      let editAddressKeys = Object.keys(this.editAddress);
-      editAddressKeys.forEach(field => (this.editAddress[field] = ""));
     },
     addNewAddress(address) {
       address.id = uuid.v4();
@@ -200,7 +200,7 @@ body {
 }
 
 .alert {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
