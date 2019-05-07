@@ -65,4 +65,33 @@ export default {
   top: 20px;
   transform: translateY(0);
 }
+
+.fa-edit:after {
+  content: "editar";
+}
+
+.fa-trash-alt:after {
+  content: "deletar";
+}
+
+.btn-group {
+  padding-top: 20px;
+}
+
+.fa-edit:after,
+.fa-trash-alt:after {
+  padding-left: 1ch;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+@media screen and (max-width: 1024px) {
+  .btn-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    float: none;
+  }
+}
 </style>
