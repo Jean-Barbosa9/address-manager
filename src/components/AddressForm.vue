@@ -11,7 +11,7 @@
           type="text"
           class="form-control col-sm mx-2"
           placeholder="ex.: 00000000"
-          maxlength="8"
+          maxlength="9"
           pattern="[0-9\-]*"
           required="required"
           ref="zipCode"
@@ -152,8 +152,17 @@ export default {
     },
 
     isFullfilled() {
-      if (this.zipCode.length == 8) {
-        this.getAddress(this.zipCode);
+      let zipCodeFormated = this.zipCode.replace(/\D/g, "");
+      console.log("zipCodeFormated: ", zipCodeFormated);
+      console.log("zipCodeFormated length: ", zipCodeFormated.length);
+      if (zipCodeFormated.length == 6) {
+        this.zipCode[4] += "-";
+      } else if (zipCodeFormated.length < 6) {
+        this.zipCode = zipCodeFormated;
+      }
+
+      if (zipCodeFormated.length == 8) {
+        this.getAddress(zipCodeFormated);
       }
     },
 
