@@ -20,7 +20,8 @@
           <i
             class="fas fa-trash-alt btn btn-danger"
             v-bind:title="'Deletar ' + address.title"
-            @click="$emit('delete-address',address.id)"
+            @click="$emit('delete-address',address)"
+            data-target="#deleteModal"
           ></i>
         </div>
       </span>

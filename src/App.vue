@@ -19,9 +19,10 @@
         v-on:open-editing="openEditing"
         v-on:close-editing="closeEditing"
         v-on:edit-address="editAddress"
-        v-on:delete-address="deleteAddress"
+        v-on:delete-address="showDeleteModal"
       />
     </div>
+    <div v-if="willDelete" class="lightbox">{{delAddress.title}}</div>
   </div>
 </template>
 
@@ -36,8 +37,7 @@ import EditAddress from "./components/EditAddress";
 import Addresses from "./components/Addresses";
 
 // Using bootstrap style
-import "../node_modules/bootstrap/dist/css/bootstrap.css";
-import { setTimeout } from "timers";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 export default {
   name: "app",
@@ -54,6 +54,11 @@ export default {
         message: ""
       },
       isEditing: false,
+      willDelete: false,
+      delAddress: {
+        id: "",
+        title: ""
+      },
       editAddress: {
         id: "",
         title: "",
@@ -127,8 +132,19 @@ export default {
       this.closeEditing();
       this.saveAddresses("Endereço editado com sucesso!");
     },
-    deleteAddress(id) {
-      this.addresses = this.addresses.filter(address => address.id !== id);
+    showDeleteModal(address) {
+      this.willDelete = true;
+      this.delAddress = {
+        id: address.id,
+        title: address.title
+      };
+    },
+    deleteAddress() {
+      console.log(this.delAddress.id);
+      this.willDelete = false;
+      this.addresses = this.addresses.filter(
+        address => address.id !== delAddress.id
+      );
       this.saveAddresses("Endereço deletado com sucesso!");
     },
     getAddresses() {
@@ -199,7 +215,8 @@ body {
   font-size: 0.8em;
 }
 
-.alert {
+.alert,
+.lightbox {
   position: fixed;
   top: 50%;
   left: 50%;

@@ -6,7 +6,7 @@
         <AddressItem
           v-bind:address="address"
           v-on:open-editing="$emit('open-editing', address)"
-          v-on:delete-address="$emit('delete-address', address.id)"
+          v-on:delete-address="$emit('delete-address', address)"
         />
       </div>
     </div>
