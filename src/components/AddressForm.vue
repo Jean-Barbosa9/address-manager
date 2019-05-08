@@ -79,7 +79,7 @@
       </div>
       <div class="btn-group d-flex justify-content-center">
         <button type="button" class="btn btn-danger col-lg" @click="closeForms">Cancelar</button>
-        <button class="btn btn-primary col-lg" type="submit">Enviar</button>
+        <button class="btn btn-primary col-lg" type="submit">Salvar</button>
       </div>
     </form>
   </div>
