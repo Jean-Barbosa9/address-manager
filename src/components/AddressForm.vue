@@ -152,14 +152,10 @@ export default {
     },
 
     isFullfilled() {
+      //TODO: Criar um método para colocar uma máscara no campo, para que o preenchimento fique mais amigável para o usuário
+
       let zipCodeFormated = this.zipCode.replace(/\D/g, "");
-      console.log("zipCodeFormated: ", zipCodeFormated);
-      console.log("zipCodeFormated length: ", zipCodeFormated.length);
-      if (zipCodeFormated.length == 6) {
-        this.zipCode[4] += "-";
-      } else if (zipCodeFormated.length < 6) {
-        this.zipCode = zipCodeFormated;
-      }
+      this.zipCode = zipCodeFormated;
 
       if (zipCodeFormated.length == 8) {
         this.getAddress(zipCodeFormated);
