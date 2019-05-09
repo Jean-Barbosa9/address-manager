@@ -22,15 +22,19 @@
         v-on:delete-address="showDeleteModal"
       />
     </div>
-    <div v-if="willDelete" class="lightbox position-fixed centered">
+    <div
+      v-if="willDelete"
+      class="lightbox position-fixed centered"
+      @click="() => willDelete = false"
+    >
       <div class="lightbox__modal position-absolute centered">
         <p class="lightbox__message py-3 text-center">
           Tem certeza que deseja excluir o endereço
           <strong>{{delAddress.title}}</strong>?
         </p>
         <div class="btn-group d-flex justify-content-center">
-          <button class="btn btn-danger col-lg" @click="() => willDelete = false">cancelar</button>
-          <button class="btn btn-primary col-lg" @click="deleteAddress">deletar</button>
+          <button class="btn btn-primary col-lg">cancelar</button>
+          <button class="btn btn-danger col-lg" @click="deleteAddress">deletar</button>
         </div>
       </div>
     </div>
@@ -144,6 +148,7 @@ export default {
       this.saveAddresses("Endereço editado com sucesso!");
     },
     showDeleteModal(address) {
+      this.isEditing = false;
       this.willDelete = true;
       this.delAddress = {
         id: address.id,
