@@ -17,6 +17,7 @@
           ref="zipCode"
           v-model="zipCode"
           v-on:input="isFullfilled()"
+          v-on:blur="maskZip"
           autofocus
         >
         <a
@@ -152,13 +153,24 @@ export default {
     },
 
     isFullfilled() {
-      //TODO: Criar um método para colocar uma máscara no campo, para que o preenchimento fique mais amigável para o usuário
-
       let zipCodeFormated = this.zipCode.replace(/\D/g, "");
       this.zipCode = zipCodeFormated;
 
       if (zipCodeFormated.length == 8) {
         this.getAddress(zipCodeFormated);
+      }
+    },
+
+    maskZip(e) {
+      //TODO: Melhorar esse método para fique mais reutilizável e genérico. O ideal é que seja inclusive como um componente
+      if (e.currentTarget.value[5] != "-") {
+        const zipCode = e.currentTarget.value;
+        let zipCodeListed = [];
+        for (let i = 0; i < zipCode.length; i++) {
+          zipCodeListed.push(zipCode[i]);
+        }
+        zipCodeListed.splice(5, 0, "-");
+        e.currentTarget.value = zipCodeListed.join("");
       }
     },
 
