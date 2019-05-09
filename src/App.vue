@@ -10,7 +10,7 @@
         v-on:edit-address="onEditAddress"
       />
       <span
-        class="alert"
+        class="alert position-fixed centered"
         v-if="alert.type !== null"
         v-bind:class="{'alert-danger':alert.type == 'error', 'alert-success':alert.type == 'success',}"
       >{{alert.message}}</span>
@@ -22,7 +22,18 @@
         v-on:delete-address="showDeleteModal"
       />
     </div>
-    <div v-if="willDelete" class="lightbox">{{delAddress.title}}</div>
+    <div v-if="willDelete" class="lightbox position-fixed centered">
+      <div class="lightbox__modal position-absolute centered">
+        <p class="lightbox__message py-3 text-center">
+          Tem certeza que deseja excluir o endereço
+          <strong>{{delAddress.title}}</strong>?
+        </p>
+        <div class="btn-group d-flex justify-content-center">
+          <button class="btn btn-danger col-lg" @click="() => willDelete = false">cancelar</button>
+          <button class="btn btn-primary col-lg" @click="deleteAddress">deletar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -140,10 +151,9 @@ export default {
       };
     },
     deleteAddress() {
-      console.log(this.delAddress.id);
       this.willDelete = false;
       this.addresses = this.addresses.filter(
-        address => address.id !== delAddress.id
+        address => address.id !== this.delAddress.id
       );
       this.saveAddresses("Endereço deletado com sucesso!");
     },
@@ -215,14 +225,30 @@ body {
   font-size: 0.8em;
 }
 
-.alert,
-.lightbox {
-  position: fixed;
+.centered {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.alert {
   box-shadow: 0 0 20px 9999px rgba(0, 0, 0, 0.5);
   z-index: 1;
+}
+
+.lightbox {
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.lightbox__modal {
+  width: 80vw;
+  height: auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px 0 #ffffff;
 }
 
 @media screen and (min-width: 440px) {
@@ -248,6 +274,10 @@ body {
 
   .title-3 {
     font-size: 1em;
+  }
+
+  .lightbox__modal {
+    width: 50vw;
   }
 }
 </style>
