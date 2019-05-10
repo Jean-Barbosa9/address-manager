@@ -89,7 +89,7 @@ export default {
         {
           id: 3,
           title: "Shopping Rio Sul",
-          zipCode: "22290070",
+          zipCode: "22290-070",
           city: "Rio de Janeiro",
           state: "RJ",
           street: "Avenida Lauro Sodré",
@@ -100,7 +100,7 @@ export default {
         {
           id: 2,
           title: "Shopping Tijuca",
-          zipCode: "20511000",
+          zipCode: "20511-000",
           city: "Rio de Janeiro",
           state: "RJ",
           street: "Avenida Maracanã",
@@ -111,7 +111,7 @@ export default {
         {
           id: 1,
           title: "Shopping Downtown",
-          zipCode: "22640904",
+          zipCode: "22640-904",
           city: "Rio de Janeiro",
           state: "RJ",
           street: "Avenida das Américas",
