@@ -1,6 +1,5 @@
 <template>
   <div class="address-manager">
-    <!-- <Header/> -->
     <div class="container">
       <NewAddress v-if="!isEditing" v-on:new-address="addNewAddress"/>
       <EditAddress
