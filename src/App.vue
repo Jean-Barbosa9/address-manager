@@ -1,7 +1,7 @@
 <template>
   <div class="address-manager">
     <Header/>
-    <router-view></router-view>
+    <router-view/>
   </div>
 </template>
 
