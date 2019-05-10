@@ -10,14 +10,13 @@
           id="zipCode"
           type="text"
           class="form-control col-sm mx-2"
-          placeholder="ex.: 00000000"
+          placeholder="00000-000"
           maxlength="9"
-          pattern="[0-9\-]*"
+          pattern="[0-9\-]{9}"
           required="required"
           ref="zipCode"
           v-model="zipCode"
-          v-on:input="isFullfilled()"
-          v-on:blur="maskZip"
+          v-on:input="isFullfilled"
           autofocus
         >
         <a
@@ -125,7 +124,7 @@ export default {
       this.$emit("close-editing");
     },
     getAddress(zipCode) {
-      fetch(`https://viacep.com.br/ws/${zipCode}/json/`)
+      fetch(`https://viacep.com.br/ws/${zipCode.replace(/\D/g, "")}/json/`)
         .then(res => res.json())
         .then(address => {
           if (!address.erro) {
@@ -152,32 +151,38 @@ export default {
         });
     },
 
-    isFullfilled() {
-      let zipCodeFormated = this.zipCode.replace(/\D/g, "");
+    isFullfilled(e) {
+      let zipCodeFormated = this.zipCode;
       this.zipCode = zipCodeFormated;
 
-      if (zipCodeFormated.length == 8) {
+      if (zipCodeFormated.length == 9) {
         this.getAddress(zipCodeFormated);
       }
+      this.maskZip(e);
     },
 
     maskZip(e) {
       //TODO: Melhorar esse método para fique mais reutilizável e genérico. O ideal é que seja inclusive como um componente
-      if (e.currentTarget.value[5] != "-") {
-        const zipCode = e.currentTarget.value;
+      const zipCode = e.currentTarget != undefined ? e.currentTarget.value : e;
+
+      if (zipCode[5] && zipCode[5] != "-") {
         let zipCodeListed = [];
         for (let i = 0; i < zipCode.length; i++) {
           zipCodeListed.push(zipCode[i]);
         }
         zipCodeListed.splice(5, 0, "-");
-        e.currentTarget.value = zipCodeListed.join("");
+        return (this.zipCode = zipCodeListed.join(""));
       }
     },
 
     leftZeros(e) {
       e.preventDefault();
-      for (var i = 0, len = 8 - this.zipCode.length; i < len; i++) {
-        this.zipCode = "0" + this.zipCode;
+      for (
+        var i = 0, len = 8 - this.zipCode.replace(/\D/g, "").length;
+        i < len;
+        i++
+      ) {
+        this.zipCode = this.maskZip("0" + this.zipCode.replace(/\D/, ""));
       }
       this.getAddress(this.zipCode);
     },
