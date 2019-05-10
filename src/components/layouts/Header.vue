@@ -1,6 +1,8 @@
 <template>
   <header class="header">
-    <img class="logo" alt="Vue logo" src="../../assets/logo.png">
+    <router-link to="/">
+      <img class="logo" alt="Vue logo" src="../../assets/logo.png">
+    </router-link>
     <h1 class="app-title">Gerenciador de Endereços</h1>
   </header>
 </template>
