@@ -12,25 +12,28 @@
         {{address.city}} / {{address.state}}
         <br>
         <div class="btn-group">
-          <router-link
-            v-if="this.navGeoLoc"
-            :to="{name: 'directions', params: {id: address.id}}"
-            target="_blank"
-            class="btn btn-primary"
-          >
-            <i class="fas fa-route" v-bind:title="`Ver rota para ${address.title}`"></i>
-          </router-link>
-          <i
-            class="fas fa-edit btn btn-secondary"
-            v-bind:title="`Editar ${address.title}`"
-            @click="$emit('open-editing',address)"
-          ></i>
-          <i
-            class="fas fa-trash-alt btn btn-danger"
-            v-bind:title="`Deletar ${address.title}`"
-            @click="$emit('delete-address',address)"
-            data-target="#deleteModal"
-          ></i>
+          <div class="btn btn-primary">
+            <i
+              class="fas fa-route"
+              v-bind:title="`Ver rota para ${address.title}`"
+              @click="redirectToMap"
+            />
+          </div>
+          <div class="btn btn-secondary">
+            <i
+              class="fas fa-edit"
+              v-bind:title="`Editar ${address.title}`"
+              @click="$emit('open-editing',address)"
+            />
+          </div>
+          <div class="btn btn-danger">
+            <i
+              class="fas fa-trash-alt"
+              v-bind:title="`Deletar ${address.title}`"
+              @click="$emit('delete-address',address)"
+              data-target="#deleteModal"
+            />
+          </div>
         </div>
         <button type="button" class="d-none my-2 btn btn-block btn-darker border-dark">
           <i class="fas fa-share-alt"></i> compartilhar
@@ -56,6 +59,17 @@ export default {
   methods: {
     showDetails() {
       this.show = !this.show;
+    },
+    redirectToMap() {
+      navigator.geolocation.getCurrentPosition(position =>
+        window.open(
+          `https://www.google.com/maps/dir/?api=1&origin=${
+            position.coords.latitude
+          },${position.coords.longitude}&destination=+${
+            this.address.zipCode
+          }&travelmode=driving`
+        )
+      );
     }
   }
 };
