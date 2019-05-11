@@ -9,8 +9,13 @@
       {{this.address.street}}, {{this.address.number}} - {{this.address.city}} / {{this.address.state}}
     </p>
     <p>Ponto de partida: latitude {{this.geoLoc.lat}}, longitude {{this.geoLoc.long}}</p>
+    <!-- TODO: Aqui posso colocar um mapa incorporado à página, usando Maps JavaScript API -->
     <div id="map">
-      <img v-bind:src="renderResponsiveImage()">
+      <img
+        src="https://developers.google.com/maps/documentation/urls/images/dir-bicycling-seattle.png"
+        alt="Representação de onde o mapa será renderizado"
+        title="Representação de onde o mapa será renderizado"
+      >
     </div>
     <span
       class="alert position-fixed centered"
@@ -46,12 +51,6 @@ export default {
     getAddress() {
       const addresses = JSON.parse(atob(localStorage.addresses));
       this.address = addresses.filter(address => address.id == this.id)[0];
-    },
-    renderResponsiveImage() {
-      // apenas para simulação enquanto não faço o mapa de fato
-      const width = document.documentElement.clientWidth,
-        height = document.documentElement.clientHeight;
-      return `https://via.placeholder.com/${width}x${height}`;
     },
     getGeolocation() {
       if (navigator.geolocation) {
