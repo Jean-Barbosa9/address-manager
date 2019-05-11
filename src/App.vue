@@ -1,21 +1,26 @@
 <template>
   <div class="address-manager">
     <Header/>
-    <router-view/>
+    <div class="container py-4">
+      <router-view/>
+    </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 // Components importings
 import Header from "./components/layouts/Header";
+import Footer from "./components/layouts/Footer";
 
-// Using bootstrap style
+// Using bootstrap
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 export default {
   name: "app",
   components: {
-    Header
+    Header,
+    Footer
   }
 };
 </script>
@@ -49,6 +54,7 @@ body {
     BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1em;
+  color: #333333;
   text-align: center;
   text-transform: uppercase;
   flex: 0 1 60%;
