@@ -13,6 +13,7 @@
         <br>
         <div class="btn-group">
           <router-link
+            v-if="this.navGeoLoc"
             :to="{name: 'directions', params: {id: address.id}}"
             target="_blank"
             class="btn btn-primary"
@@ -45,8 +46,12 @@ export default {
   props: ["address"],
   data() {
     return {
-      show: false
+      show: false,
+      navGeoLoc: false
     };
+  },
+  created() {
+    if (navigator.geolocation) this.navGeoLoc = true;
   },
   methods: {
     showDetails() {
@@ -83,11 +88,6 @@ export default {
   padding-top: 20px;
   justify-content: center;
   float: none;
-}
-
-@media screen and (max-width: 1024px) {
-  .btn-group {
-  }
 }
 
 @media screen and (min-width: 1025px) {
