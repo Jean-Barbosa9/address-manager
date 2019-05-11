@@ -1,26 +1,24 @@
 <template>
-  <div class="address-manager">
-    <div class="container">
-      <NewAddress v-if="!isEditing" v-on:new-address="addNewAddress"/>
-      <EditAddress
-        v-if="isEditing"
-        v-bind:address="editAddress"
-        v-on:close-editing="closeEditing"
-        v-on:edit-address="onEditAddress"
-      />
-      <span
-        class="alert position-fixed centered"
-        v-if="alert.type !== null"
-        v-bind:class="{'alert-danger':alert.type == 'error', 'alert-success':alert.type == 'success',}"
-      >{{alert.message}}</span>
-      <Addresses
-        v-bind:addresses="addresses"
-        v-on:open-editing="openEditing"
-        v-on:close-editing="closeEditing"
-        v-on:edit-address="editAddress"
-        v-on:delete-address="showDeleteModal"
-      />
-    </div>
+  <div>
+    <NewAddress v-if="!isEditing" v-on:new-address="addNewAddress"/>
+    <EditAddress
+      v-if="isEditing"
+      v-bind:address="editAddress"
+      v-on:close-editing="closeEditing"
+      v-on:edit-address="onEditAddress"
+    />
+    <span
+      class="alert position-fixed centered"
+      v-if="alert.type !== null"
+      v-bind:class="{'alert-danger':alert.type == 'error', 'alert-success':alert.type == 'success',}"
+    >{{alert.message}}</span>
+    <Addresses
+      v-bind:addresses="addresses"
+      v-on:open-editing="openEditing"
+      v-on:close-editing="closeEditing"
+      v-on:edit-address="editAddress"
+      v-on:delete-address="showDeleteModal"
+    />
     <div
       v-if="willDelete"
       class="lightbox position-fixed centered"
