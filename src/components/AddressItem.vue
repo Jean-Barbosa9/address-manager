@@ -11,28 +11,29 @@
         <br>
         {{address.city}} / {{address.state}}
         <br>
+        <br>
+        <strong v-if="distance">{{distance}} distante da sua posição</strong>
         <div class="btn-group">
-          <div class="btn btn-primary">
-            <i
-              class="fas fa-route"
-              v-bind:title="`Ver rota para ${address.title}`"
-              @click="redirectToMap"
-            />
+          <div
+            class="btn btn-primary"
+            @click="redirectToMap"
+            v-bind:title="`Ver rota para ${address.title}`"
+          >
+            <i class="fas fa-route"/>
           </div>
-          <div class="btn btn-secondary">
-            <i
-              class="fas fa-edit"
-              v-bind:title="`Editar ${address.title}`"
-              @click="$emit('open-editing',address)"
-            />
+          <div
+            class="btn btn-secondary"
+            @click="$emit('open-editing',address)"
+            v-bind:title="`Editar ${address.title}`"
+          >
+            <i class="fas fa-edit"/>
           </div>
-          <div class="btn btn-danger">
-            <i
-              class="fas fa-trash-alt"
-              v-bind:title="`Deletar ${address.title}`"
-              @click="$emit('delete-address',address)"
-              data-target="#deleteModal"
-            />
+          <div
+            class="btn btn-danger"
+            @click="$emit('delete-address',address)"
+            v-bind:title="`Deletar ${address.title}`"
+          >
+            <i class="fas fa-trash-alt"/>
           </div>
         </div>
         <button type="button" class="d-none my-2 btn btn-block btn-darker border-dark">
@@ -50,26 +51,91 @@ export default {
   data() {
     return {
       show: false,
-      navGeoLoc: false
+      navGeoLoc: false,
+      coords: {
+        current: {
+          latitude: null,
+          longitude: null
+        },
+        selected: {
+          lat: null,
+          lng: null
+        }
+      },
+      distance: null
     };
   },
   created() {
-    if (navigator.geolocation) this.navGeoLoc = true;
+    if (navigator.geolocation) {
+      this.navGeoLoc = true;
+      this.getGetCurrentGeoLocation();
+    }
   },
   methods: {
     showDetails() {
       this.show = !this.show;
+      this.getAddressGeoLocation();
+    },
+    getGetCurrentGeoLocation() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.coords.current = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+      });
+    },
+    getAddressGeoLocation() {
+      const { number, street } = this.address,
+        streetFormated = street.split(/[\s]+/g).join("+");
+
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${number}+${streetFormated}&key=AIzaSyATXPcAwIQfPl484iIOT1LFlGQEvun3k70`
+      )
+        .then(res => res.json())
+        .then(data => {
+          const { lat, lng } = data.results[0].geometry.location; //destination
+          const { latitude, longitude } = this.coords.current; //Origin
+          this.coords.selected = { lat, lng };
+
+          this.distance = this.getStraightDistance(
+            latitude,
+            longitude,
+            lat,
+            lng
+          );
+        });
+    },
+    getStraightDistance(latOrig, lonOrig, latDest, lonDest) {
+      const earthRadius = 6371,
+        degLat = this.getRadiusFromDegrees(latDest - latOrig),
+        degLon = this.getRadiusFromDegrees(lonDest - lonOrig),
+        angle =
+          Math.sin(degLat / 2) * Math.sin(degLat / 2) +
+          Math.cos(this.getRadiusFromDegrees(latOrig)) *
+            Math.cos(this.getRadiusFromDegrees(latDest)) *
+            Math.sin(degLon / 2) *
+            Math.sin(degLon / 2),
+        curvature = 2 * Math.atan2(Math.sqrt(angle), Math.sqrt(1 - angle)),
+        distance = earthRadius * curvature;
+
+      if (distance < 1) {
+        return `${parseInt(distance * 100)}m`;
+      } else {
+        return `${distance.toFixed(2).replace(".", ",")}km`;
+      }
+    },
+    getRadiusFromDegrees(deg) {
+      return deg * (Math.PI / 180);
     },
     redirectToMap() {
-      navigator.geolocation.getCurrentPosition(position =>
+      const { latitude, longitude } = this.coords.current;
+      if (latitude && longitude) {
         window.open(
-          `https://www.google.com/maps/dir/?api=1&origin=${
-            position.coords.latitude
-          },${position.coords.longitude}&destination=+${
+          `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=+${
             this.address.zipCode
           }&travelmode=driving`
-        )
-      );
+        );
+      }
     }
   }
 };
