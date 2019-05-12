@@ -16,7 +16,7 @@
         <p class="my-3">
           <strong v-if="distance">{{distance}} distante da sua posição</strong>
         </p>
-        <p v-if="weather.data != {}">
+        <p v-if="weather.data.consolidated_weather">
           <strong>Clima no local:</strong>
           <br>
           <span>
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     loadDetails() {
-      this.$emit("loading", true);
+      this.$emit("loading", !this.show);
       this.showDetails();
     },
     showDetails() {
