@@ -22,9 +22,8 @@
     </div>
     <img
       v-if="loading"
-      class="alert position-fixed centered"
+      class="position-fixed centered loading"
       src="../assets/spinner.gif"
-      width="100%"
       alt="Loading..."
     >
   </div>
