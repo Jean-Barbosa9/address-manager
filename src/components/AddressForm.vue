@@ -9,6 +9,7 @@
         <input
           id="zipCode"
           type="text"
+          v-bind:class="{'is-invalid':errorMessage}"
           class="form-control col-sm mx-2"
           placeholder="00000-000"
           maxlength="9"
@@ -31,7 +32,11 @@
         class="form-text text-danger error-message"
         v-if="errorMessage.length"
       >{{ errorMessage }}</span>
-      <button type="submit" class="btn btn-block btn-secondary" v-on:click="leftZeros">Buscar CEP</button>
+      <button
+        type="submit"
+        class="btn btn-block btn-secondary"
+        v-on:click="leftZeros"
+      >Buscar endereço</button>
     </form>
     <form @submit="sendAddress" v-if="addressFound" ref="sendForm">
       <div class="form-group">
@@ -86,6 +91,7 @@
 </template>
 
 <script>
+import { setTimeout } from "timers";
 export default {
   name: "AddressForm",
   props: ["usage", "address"],
@@ -177,14 +183,21 @@ export default {
 
     leftZeros(e) {
       e.preventDefault();
-      for (
-        var i = 0, len = 8 - this.zipCode.replace(/\D/g, "").length;
-        i < len;
-        i++
-      ) {
-        this.zipCode = this.maskZip("0" + this.zipCode.replace(/\D/, ""));
+      this.closeForms();
+      if (this.zipCode != "") {
+        for (
+          var i = 0, len = 8 - this.zipCode.replace(/\D/g, "").length;
+          i < len;
+          i++
+        ) {
+          this.zipCode = this.maskZip("0" + this.zipCode.replace(/\D/, ""));
+        }
+        this.getAddress(this.zipCode);
+      } else {
+        this.errorMessage = "Preencha o CEP, por favor";
+        this.$refs.zipCode.focus();
+        setTimeout(() => (this.errorMessage = ""), 1500);
       }
-      this.getAddress(this.zipCode);
     },
     sendAddress(e) {
       e.preventDefault();
