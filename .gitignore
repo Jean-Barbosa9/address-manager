@@ -5,6 +5,7 @@ package-lock.json
 pnpm-lock.yaml
 
 # local env files
+variables.js
 .env.local
 .env.*.local
 
