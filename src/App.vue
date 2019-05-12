@@ -98,6 +98,11 @@ body {
   box-shadow: 0 0 20px 0 #ffffff;
 }
 
+.loading {
+  max-width: 70vw;
+  box-shadow: 0 0 20px 9999px #ffffff;
+}
+
 @media screen and (min-width: 440px) {
   .app-title {
     font-size: 1.5em;
@@ -125,6 +130,10 @@ body {
 
   .lightbox__modal {
     width: 50vw;
+  }
+
+  .loading {
+    max-width: 40vw;
   }
 }
 </style>
