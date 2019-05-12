@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import variables from "../variables.js";
+
 export default {
   name: "AddressItem",
   props: ["address"],
@@ -87,9 +89,16 @@ export default {
     getAddressGeoLocation() {
       const { number, street } = this.address,
         streetFormated = street.split(/[\s]+/g).join("+");
+      let apiKey;
+
+      if (location.port) {
+        apiKey = variables.apiKeys.development;
+      } else {
+        apiKey = variables.apiKeys.production;
+      }
 
       fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${number}+${streetFormated}&key=AIzaSyATXPcAwIQfPl484iIOT1LFlGQEvun3k70`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${number}+${streetFormated}&key=${apiKey}`
       )
         .then(res => res.json())
         .then(data => {
