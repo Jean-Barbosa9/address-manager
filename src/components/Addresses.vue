@@ -16,9 +16,17 @@
           v-bind:address="address"
           v-on:open-editing="$emit('open-editing', address)"
           v-on:delete-address="$emit('delete-address', address)"
+          v-on:loading="showLoading"
         />
       </div>
     </div>
+    <img
+      v-if="loading"
+      class="alert position-fixed centered"
+      src="../assets/spinner.gif"
+      width="100%"
+      alt="Loading..."
+    >
   </div>
 </template>
 
@@ -28,8 +36,22 @@ import AddressItem from "./AddressItem.vue";
 export default {
   name: "Addresses",
   props: ["addresses"],
+  data() {
+    return {
+      loading: false
+    };
+  },
   components: {
     AddressItem
+  },
+  methods: {
+    showLoading(payload) {
+      if (payload && !this.loading) {
+        this.loading = true;
+      } else {
+        this.loading = false;
+      }
+    }
   }
 };
 </script>
