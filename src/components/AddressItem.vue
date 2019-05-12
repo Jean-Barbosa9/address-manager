@@ -1,18 +1,33 @@
 <template>
   <div class="address-item card mb-4" v-bind:address="address">
-    <div class="card-body" @click="showDetails">
+    <div class="card-body" @click="loadDetails">
       <strong>{{address.title}}</strong>
       <i class="fas posar" v-bind:class="{'fa-chevron-down':!show,'fa-chevron-up':show}"/>
       <br>
-      <span class="address-details" v-if="show">
-        {{address.street}}, {{address.number}} - {{address.complement}}
-        <br>
-        {{address.neighborhood}} - {{address.zipCode}}
-        <br>
-        {{address.city}} / {{address.state}}
-        <br>
-        <br>
-        <strong v-if="distance">{{distance}} distante da sua posição</strong>
+
+      <div class="address-details" v-if="show">
+        <p>
+          {{address.street}}, {{address.number}} - {{address.complement}}
+          <br>
+          {{address.neighborhood}} - {{address.zipCode}}
+          <br>
+          {{address.city}} / {{address.state}}
+        </p>
+        <p class="my-3">
+          <strong v-if="distance">{{distance}} distante da sua posição</strong>
+        </p>
+        <p v-if="weather.data != {}">
+          <strong>Clima no local:</strong>
+          <br>
+          <span>
+            <img v-bind:src="weather.icon" alt="Ícone da clima" class="m-2" height="40px">
+            {{parseInt(weather.data.consolidated_weather[0].the_temp)}}º
+            <br>
+            mín: {{parseInt(weather.data.consolidated_weather[0].min_temp)}}º
+            <br>
+            máx: {{parseInt(weather.data.consolidated_weather[0].min_temp)}}º
+          </span>
+        </p>
         <div class="btn-group">
           <div
             class="btn btn-primary"
@@ -39,7 +54,7 @@
         <button type="button" class="d-none my-2 btn btn-block btn-darker border-dark">
           <i class="fas fa-share-alt"></i> compartilhar
         </button>
-      </span>
+      </div>
     </div>
   </div>
 </template>
@@ -52,6 +67,7 @@ export default {
   props: ["address"],
   data() {
     return {
+      loading: false,
       show: false,
       navGeoLoc: false,
       coords: {
@@ -64,7 +80,14 @@ export default {
           lng: null
         }
       },
-      distance: null
+      distance: null,
+      weather: {
+        data: {},
+        icon: "",
+        stateTranslate: {
+          LightCloud: "Sol entre nuvens"
+        }
+      }
     };
   },
   created() {
@@ -74,9 +97,13 @@ export default {
     }
   },
   methods: {
+    loadDetails() {
+      this.$emit("loading", true);
+      this.showDetails();
+    },
     showDetails() {
       this.show = !this.show;
-      this.getAddressGeoLocation();
+      if (this.show) this.getAddressGeoLocation();
     },
     getGetCurrentGeoLocation() {
       navigator.geolocation.getCurrentPosition(position => {
@@ -86,9 +113,10 @@ export default {
         };
       });
     },
-    getAddressGeoLocation() {
-      const { number, street } = this.address,
-        streetFormated = street.split(/[\s]+/g).join("+");
+    async getAddressGeoLocation() {
+      const { number, street, city } = this.address,
+        formatedStreet = street.split(/[\s]+/g).join("+"),
+        query = `query=${city.split(/[\s]+/g).join("+")}`;
       let apiKey;
 
       if (location.port) {
@@ -97,22 +125,16 @@ export default {
         apiKey = variables.apiKeys.production;
       }
 
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${number}+${streetFormated}&key=${apiKey}`
-      )
-        .then(res => res.json())
-        .then(data => {
-          const { lat, lng } = data.results[0].geometry.location; //destination
-          const { latitude, longitude } = this.coords.current; //Origin
-          this.coords.selected = { lat, lng };
+      const data = await (await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${number}+${formatedStreet}&key=${apiKey}`
+      )).json();
 
-          this.distance = this.getStraightDistance(
-            latitude,
-            longitude,
-            lat,
-            lng
-          );
-        });
+      const { lat, lng } = data.results[0].geometry.location; //destination
+      const { latitude, longitude } = this.coords.current; //Origin
+
+      this.coords.selected = { lat, lng };
+      this.distance = this.getStraightDistance(latitude, longitude, lat, lng);
+      this.getWeather(query);
     },
     getStraightDistance(latOrig, lonOrig, latDest, lonDest) {
       const earthRadius = 6371,
@@ -135,6 +157,25 @@ export default {
     },
     getRadiusFromDegrees(deg) {
       return deg * (Math.PI / 180);
+    },
+    async getWeather(query) {
+      const resWoeid = await (await fetch(
+          `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/api/location/search/?${query}`
+        )).json(),
+        woeid = resWoeid[0].woeid;
+
+      const weatherData = await (await fetch(
+        `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/${woeid}`
+      )).json();
+
+      this.weather = {
+        data: weatherData,
+        icon: `https://www.metaweather.com/static/img/weather/ico/${
+          weatherData.consolidated_weather[0].weather_state_abbr
+        }.ico`
+      };
+
+      this.$emit("loading", false);
     },
     redirectToMap() {
       const { latitude, longitude } = this.coords.current;
