@@ -13,7 +13,7 @@
       v-bind:class="{'alert-danger':alert.type == 'error', 'alert-success':alert.type == 'success',}"
     >{{alert.message}}</span>
     <Addresses
-      v-bind:addresses="addresses"
+      v-bind:addresses="allAddresses"
       v-on:open-editing="openEditing"
       v-on:close-editing="closeEditing"
       v-on:edit-address="editAddress"
@@ -47,6 +47,7 @@ import uuid from "uuid";
 import NewAddress from "../components/NewAddress";
 import EditAddress from "../components/EditAddress";
 import Addresses from "../components/Addresses";
+import { mapGetters } from "vuex";
 
 // Using bootstrap style
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -54,11 +55,11 @@ import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 export default {
   name: "Home",
   components: {
-    // Header,
     NewAddress,
     EditAddress,
     Addresses
   },
+  computed: mapGetters(["allAddresses"]),
   data() {
     return {
       alert: {
@@ -120,7 +121,7 @@ export default {
     };
   },
   created() {
-    if (localStorage.addresses) this.addresses = this.getAddresses();
+    if (localStorage.addresses) this.allAddresses = this.getAddresses();
   },
   methods: {
     openEditing(address) {
@@ -133,11 +134,11 @@ export default {
     },
     addNewAddress(address) {
       address.id = uuid.v4();
-      this.addresses.unshift(address);
+      this.allAddresses.unshift(address);
       this.saveAddresses("Endereço adicionado com sucesso!");
     },
     onEditAddress(payload) {
-      this.addresses = this.addresses.map(address => {
+      this.allAddresses = this.allAddresses.map(address => {
         return address.id === payload.id ? payload : address;
       });
 
@@ -154,7 +155,7 @@ export default {
     },
     deleteAddress() {
       this.willDelete = false;
-      this.addresses = this.addresses.filter(
+      this.allAddresses = this.allAddresses.filter(
         address => address.id !== this.delAddress.id
       );
       this.saveAddresses("Endereço deletado com sucesso!");
@@ -163,7 +164,10 @@ export default {
       return JSON.parse(atob(localStorage.addresses));
     },
     saveAddresses(message) {
-      localStorage.setItem("addresses", btoa(JSON.stringify(this.addresses)));
+      localStorage.setItem(
+        "addresses",
+        btoa(JSON.stringify(this.allAddresses))
+      );
       this.alert = {
         type: "success",
         message: message
