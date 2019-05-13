@@ -10,7 +10,7 @@
       <div class="collapse" id="navbarMain">
         <ul class="navbar-nav d-inline-block mx-3">
           <li class="nav-item">
-            <router-link to="/about" class="nav-link">Home</router-link>
+            <router-link to="/" class="nav-link">Home</router-link>
           </li>
         </ul>
         <ul class="navbar-nav d-inline-block">
