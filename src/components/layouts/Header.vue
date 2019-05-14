@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header bg-secondary">
     <nav class="navbar px-0">
       <router-link to="/">
         <h1 class="app-title">Gerenciador de Endereços</h1>
@@ -37,6 +37,6 @@ export default {
   padding: 10px;
   justify-content: center;
   align-items: center;
-  background: rgba(173, 228, 204, 0.7);
+  /* background: rgba(173, 228, 204, 0.7); */
 }
 </style>
