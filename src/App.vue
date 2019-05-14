@@ -25,7 +25,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "assets/custom-bootstrap.scss";
+
 * {
   margin: 0;
   padding: 0;
@@ -60,16 +62,18 @@ body {
   flex: 0 1 60%;
 }
 
-.title-1 {
-  font-size: 1.2em;
-}
+.title {
+  &-1 {
+    font-size: 1.2em;
+  }
 
-.title-2 {
-  font-size: 1em;
-}
+  &-2 {
+    font-size: 1em;
+  }
 
-.title-3 {
-  font-size: 0.8em;
+  &-3 {
+    font-size: 0.8em;
+  }
 }
 
 .centered {
@@ -87,15 +91,15 @@ body {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.7);
-}
 
-.lightbox__modal {
-  width: 80vw;
-  height: auto;
-  padding: 30px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 20px 0 #ffffff;
+  &__modal {
+    width: 80vw;
+    height: auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px 0 #ffffff;
+  }
 }
 
 .loading {
@@ -116,16 +120,18 @@ body {
     flex-basis: 100%;
   }
 
-  .title-1 {
-    font-size: 2em;
-  }
+  .title {
+    &-1 {
+      font-size: 2em;
+    }
 
-  .title-2 {
-    font-size: 1.5em;
-  }
+    &-2 {
+      font-size: 1.5em;
+    }
 
-  .title-3 {
-    font-size: 1em;
+    &-3 {
+      font-size: 1em;
+    }
   }
 
   .lightbox__modal {
