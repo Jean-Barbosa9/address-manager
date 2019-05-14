@@ -30,14 +30,14 @@
         </p>
         <div class="btn-group">
           <div
-            class="btn btn-primary"
+            class="btn btn-secondary"
             @click="redirectToMap"
             v-bind:title="`Ver rota para ${address.title}`"
           >
             <i class="fas fa-route"/>
           </div>
           <div
-            class="btn btn-secondary"
+            class="btn btn-primary"
             @click="$emit('open-editing',address)"
             v-bind:title="`Editar ${address.title}`"
           >
@@ -191,7 +191,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../assets/custom-bootstrap.scss";
+
 .card-body {
   position: relative;
   cursor: pointer;
@@ -202,14 +204,16 @@ export default {
   right: 20px;
 }
 
-.fa-chevron-down {
-  top: 50%;
-  transform: translateY(-50%);
-}
+.fa {
+  &-chevron-down {
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
-.fa-chevron-up {
-  top: 20px;
-  transform: translateY(0);
+  &-chevron-up {
+    top: 20px;
+    transform: translateY(0);
+  }
 }
 
 .btn-group {
@@ -221,25 +225,25 @@ export default {
 }
 
 @media screen and (min-width: 1025px) {
-  .fa-route:after,
-  .fa-edit:after,
-  .fa-trash-alt:after {
-    padding-left: 1ch;
-    font-family: "Open Sans", Arial, Helvetica, sans-serif, -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
-      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  }
+  .fa {
+    &-route:after,
+    &-edit:after,
+    &-trash-alt:after {
+      padding-left: 1ch;
+      font-family: $font-family-base;
+    }
 
-  .fa-route:after {
-    content: "rota";
-  }
+    &-route:after {
+      content: "rota";
+    }
 
-  .fa-edit:after {
-    content: "editar";
-  }
+    &-edit:after {
+      content: "editar";
+    }
 
-  .fa-trash-alt:after {
-    content: "deletar";
+    &-trash-alt:after {
+      content: "deletar";
+    }
   }
 }
 </style>
