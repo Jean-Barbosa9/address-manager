@@ -42,9 +42,16 @@ const getters = {
   allAddresses: state => state.addresses
 };
 
-const actions = {};
+const actions = {
+  fetchAddresses({ commit }) {
+    const localAddresses = JSON.parse(atob(localStorage.addresses));
+    commit("setAddresses", localAddresses);
+  }
+};
 
-const mutations = {};
+const mutations = {
+  setAddresses: (state, addresses) => (state.addresses = addresses)
+};
 
 export default {
   state,

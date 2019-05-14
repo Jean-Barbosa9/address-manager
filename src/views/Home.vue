@@ -47,7 +47,7 @@ import uuid from "uuid";
 import NewAddress from "../components/NewAddress";
 import EditAddress from "../components/EditAddress";
 import Addresses from "../components/Addresses";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 // Using bootstrap style
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -82,48 +82,14 @@ export default {
         neighborhood: "",
         number: "",
         complement: ""
-      },
-      addresses: [
-        {
-          id: 3,
-          title: "Shopping Rio Sul",
-          zipCode: "22290-070",
-          city: "Rio de Janeiro",
-          state: "RJ",
-          street: "Avenida Lauro Sodré",
-          neighborhood: "Botafogo",
-          number: "445",
-          complement: "Parte DC01, Shop 401"
-        },
-        {
-          id: 2,
-          title: "Shopping Tijuca",
-          zipCode: "20511-000",
-          city: "Rio de Janeiro",
-          state: "RJ",
-          street: "Avenida Maracanã",
-          neighborhood: "Tijuca",
-          number: "987",
-          complement: "7º piso"
-        },
-        {
-          id: 1,
-          title: "Shopping Downtown",
-          zipCode: "22640-904",
-          city: "Rio de Janeiro",
-          state: "RJ",
-          street: "Avenida das Américas",
-          neighborhood: "Centro",
-          number: "500",
-          complement: "Bloco 6 2º piso"
-        }
-      ]
+      }
     };
   },
   created() {
-    if (localStorage.addresses) this.allAddresses = this.getAddresses();
+    if (localStorage.addresses) this.fetchAddresses();
   },
   methods: {
+    ...mapActions(["fetchAddresses"]),
     openEditing(address) {
       this.isEditing = true;
       this.editAddress = address;
