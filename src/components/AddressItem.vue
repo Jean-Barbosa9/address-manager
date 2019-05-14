@@ -30,7 +30,7 @@
         </p>
         <div class="btn-group">
           <div
-            class="btn btn-secondary"
+            class="btn btn-dark"
             @click="redirectToMap"
             v-bind:title="`Ver rota para ${address.title}`"
           >
