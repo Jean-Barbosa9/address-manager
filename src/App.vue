@@ -34,9 +34,7 @@ export default {
 }
 
 body {
-  font-family: "Open Sans", Arial, Helvetica, sans-serif, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: $font-family-base;
   line-height: 1.4;
 }
 
