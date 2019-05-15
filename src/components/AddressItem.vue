@@ -38,11 +38,7 @@
           >
             <i class="fas fa-route"/>
           </div>
-          <div
-            class="btn btn-primary"
-            @click="$emit('open-editing',address)"
-            v-bind:title="`Editar ${address.title}`"
-          >
+          <div class="btn btn-primary" @click="$router.push(`/edit/${address.id}`)">
             <i class="fas fa-edit"/>
           </div>
           <div
@@ -105,6 +101,10 @@ export default {
     }
   },
   methods: {
+    teste() {
+      console.log(this.$route);
+      this.$router.path = "/edit/1";
+    },
     loadDetails() {
       this.$emit("loading", !this.show);
       this.showDetails();

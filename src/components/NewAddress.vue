@@ -15,10 +15,10 @@ export default {
     AddressForm
   },
   methods: {
-    ...mapActions(["addAddress"]),
+    ...mapActions(["addAddress", "saveAddress"]),
     handleAddress(address) {
       this.addAddress(address);
-      this.$emit("save", "Endereço adicionado com sucesso");
+      this.saveAddress("Endereço adicionado com sucesso");
     }
   }
 };

@@ -3,6 +3,10 @@ import uuid from "uuid";
 // aqui serão feitas as solicitações ao Firestore
 
 const state = {
+  alert: {
+    type: null,
+    message: ""
+  },
   editingAddress: {
     id: null,
     title: "",
@@ -52,6 +56,7 @@ const state = {
 };
 
 const getters = {
+  alert: state => state.alert,
   allAddresses: state => state.addresses,
   editingAddress: state => state.editingAddress
 };
@@ -61,8 +66,8 @@ const actions = {
     const localAddresses = JSON.parse(atob(localStorage.addresses));
     commit("setAddresses", localAddresses);
   },
-  willEdit({ commit }, address) {
-    commit("setEditAddress", address);
+  willEdit({ commit }, id) {
+    commit("setEditAddress", id);
   },
   addAddress({ commit }, address) {
     address.id = uuid.v4();
@@ -73,12 +78,18 @@ const actions = {
   },
   deleteAddress({ commit }, id) {
     commit("addressRemoved", id);
+  },
+  saveAddress({ commit }, message) {
+    commit("localSave", message);
   }
 };
 
 const mutations = {
   setAddresses: (state, addresses) => (state.addresses = addresses),
-  setEditAddress: (state, address) => (state.editingAddress = address),
+  setEditAddress: (state, id) =>
+    (state.editingAddress = state.addresses.filter(
+      address => address.id == id
+    )),
   newAddress: (state, address) => {
     state.addresses.unshift(address);
   },
@@ -87,7 +98,21 @@ const mutations = {
       address.id === payload.id ? payload : address
     )),
   addressRemoved: (state, id) =>
-    (state.addresses = state.addresses.filter(address => address.id !== id))
+    (state.addresses = state.addresses.filter(address => address.id !== id)),
+  localSave: (state, message) => {
+    localStorage.setItem("addresses", btoa(JSON.stringify(state.addresses)));
+    state.alert = {
+      type: "success",
+      message: message
+    };
+
+    setTimeout(() => {
+      state.alert = {
+        type: null,
+        message: ""
+      };
+    }, 2000);
+  }
 };
 
 export default {

@@ -69,7 +69,7 @@ export default {
     AddressItem
   },
   methods: {
-    ...mapActions(["fetchAddresses", "deleteAddress"]),
+    ...mapActions(["fetchAddresses", "deleteAddress", "saveAddress"]),
     showLoading(payload) {
       if (payload && !this.loading) {
         this.loading = true;
@@ -79,7 +79,7 @@ export default {
     },
     delAddress() {
       this.deleteAddress(this.willDelete.id);
-      this.$emit("save", "Endereço deletado com sucesso!");
+      this.saveAddress("Endereço deletado com sucesso!");
     },
     showDeleteModal(address) {
       this.willDelete = {

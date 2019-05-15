@@ -114,16 +114,28 @@ export default {
   },
   created() {
     if (this.usage == "edit-address") {
+      const {
+        id,
+        title,
+        zipCode,
+        state,
+        city,
+        neighborhood,
+        street,
+        number,
+        complement
+      } = this.editingAddress[0];
+      console.log("this.editingAddress: ", this.editingAddress);
       this.addressFound = true;
-      this.id = this.editingAddress.id;
-      this.title = this.editingAddress.title;
-      this.zipCode = this.editingAddress.zipCode;
-      this.state = this.editingAddress.state;
-      this.city = this.editingAddress.city;
-      this.neighborhood = this.editingAddress.neighborhood;
-      this.street = this.editingAddress.street;
-      this.number = this.editingAddress.number;
-      this.complement = this.editingAddress.complement;
+      this.id = id;
+      this.title = title;
+      this.zipCode = zipCode;
+      this.state = state;
+      this.city = city;
+      this.neighborhood = neighborhood;
+      this.street = street;
+      this.number = number;
+      this.complement = complement;
     }
   },
   methods: {
@@ -131,6 +143,7 @@ export default {
     closeForms() {
       this.addressFound = false;
       this.$emit("close-editing");
+      this.$router.push("/");
     },
     getAddress(zipCode) {
       fetch(`https://viacep.com.br/ws/${zipCode.replace(/\D/g, "")}/json/`)
