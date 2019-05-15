@@ -4,8 +4,7 @@
     <AddressForm
       class="card-body"
       usage="edit-address"
-      v-bind:address="address"
-      v-on:edit-address="editAddress"
+      v-on:edit-address="handleAddress"
       v-on:close-editing="$emit('close-editing')"
     />
   </div>
@@ -13,6 +12,7 @@
 
 <script>
 import AddressForm from "./AddressForm";
+import { mapActions } from "vuex";
 
 export default {
   name: "EditAddress",
@@ -21,8 +21,10 @@ export default {
     AddressForm
   },
   methods: {
-    editAddress(address) {
-      this.$emit("edit-address", address);
+    ...mapActions(["editAddress"]),
+    handleAddress(address) {
+      this.editAddress(address);
+      this.$emit("save", "Endereço alterado com sucesso!");
     }
   }
 };

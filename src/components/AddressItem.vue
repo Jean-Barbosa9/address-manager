@@ -14,18 +14,20 @@
           {{address.city}} / {{address.state}}
         </p>
         <p class="my-3">
-          <strong v-if="distance">{{distance}} distante da sua posição</strong>
+          <span v-if="distance.error">Erro ao consultar a distância até este endereço.</span>
+          <strong v-if="!distance.error">{{distance.measure}} distante da sua posição</strong>
         </p>
-        <p v-if="weather.data.consolidated_weather">
+        <span v-if="weather.error">Erro ao consultar o clima neste local</span>
+        <p v-if="!weather.error">
           <strong>Clima no local:</strong>
           <br>
           <span>
             <img v-bind:src="weather.icon" alt="Ícone da clima" class="m-2" height="40px">
-            {{parseInt(weather.data.consolidated_weather[0].the_temp)}}º
+            {{parseInt(weather.the_temp)}}º
             <br>
-            mín: {{parseInt(weather.data.consolidated_weather[0].min_temp)}}º
+            mín: {{parseInt(weather.min_temp)}}º
             <br>
-            máx: {{parseInt(weather.data.consolidated_weather[0].min_temp)}}º
+            máx: {{parseInt(weather.max_temp)}}º
           </span>
         </p>
         <div class="btn-group">
@@ -80,9 +82,15 @@ export default {
           lng: null
         }
       },
-      distance: null,
+      distance: {
+        error: false,
+        measure: null
+      },
       weather: {
-        data: {},
+        error: false,
+        the_temp: "",
+        min_temp: "",
+        max_temp: "",
         icon: "",
         stateTranslate: {
           LightCloud: "Sol entre nuvens"
@@ -128,13 +136,22 @@ export default {
       const data = await (await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${number}+${formatedStreet}&key=${apiKey}`
       )).json();
+      if (!data.results.length) {
+        this.distance.error = this.weather.error = true;
+        this.$emit("loading", false);
+      } else {
+        const { lat, lng } = data.results[0].geometry.location; //destination
+        const { latitude, longitude } = this.coords.current; //Origin
 
-      const { lat, lng } = data.results[0].geometry.location; //destination
-      const { latitude, longitude } = this.coords.current; //Origin
-
-      this.coords.selected = { lat, lng };
-      this.distance = this.getStraightDistance(latitude, longitude, lat, lng);
-      this.getWeather(query);
+        this.coords.selected = { lat, lng };
+        this.distance.measure = this.getStraightDistance(
+          latitude,
+          longitude,
+          lat,
+          lng
+        );
+        this.getWeather(query);
+      }
     },
     getStraightDistance(latOrig, lonOrig, latDest, lonDest) {
       const earthRadius = 6371,
@@ -167,12 +184,17 @@ export default {
       const weatherData = await (await fetch(
         `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/${woeid}`
       )).json();
-
+      const {
+        the_temp,
+        min_temp,
+        max_temp,
+        weather_state_abbr
+      } = weatherData.consolidated_weather[0];
       this.weather = {
-        data: weatherData,
-        icon: `https://www.metaweather.com/static/img/weather/ico/${
-          weatherData.consolidated_weather[0].weather_state_abbr
-        }.ico`
+        the_temp,
+        min_temp,
+        max_temp,
+        icon: `https://www.metaweather.com/static/img/weather/ico/${weather_state_abbr}.ico`
       };
 
       this.$emit("loading", false);

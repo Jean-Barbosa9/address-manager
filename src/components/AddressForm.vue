@@ -1,5 +1,5 @@
 <template>
-  <div class="address-form" v-bind:usage="usage" v-bind:address="address">
+  <div class="address-form" v-bind:usage="usage">
     <form class="mb-3" @submit="leftZeros" ref="getForm">
       <div class="form-group row px-3 align-items-center">
         <label class="font-weight-bold" for="zipCode">
@@ -91,10 +91,12 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
+import { mapGetters } from "vuex";
+
 export default {
   name: "AddressForm",
   props: ["usage", "address"],
+  computed: mapGetters(["editingAddress"]),
   data() {
     return {
       addressFound: false,
@@ -113,18 +115,19 @@ export default {
   created() {
     if (this.usage == "edit-address") {
       this.addressFound = true;
-      this.id = this.address.id;
-      this.title = this.address.title;
-      this.zipCode = this.address.zipCode;
-      this.state = this.address.state;
-      this.city = this.address.city;
-      this.neighborhood = this.address.neighborhood;
-      this.street = this.address.street;
-      this.number = this.address.number;
-      this.complement = this.address.complement;
+      this.id = this.editingAddress.id;
+      this.title = this.editingAddress.title;
+      this.zipCode = this.editingAddress.zipCode;
+      this.state = this.editingAddress.state;
+      this.city = this.editingAddress.city;
+      this.neighborhood = this.editingAddress.neighborhood;
+      this.street = this.editingAddress.street;
+      this.number = this.editingAddress.number;
+      this.complement = this.editingAddress.complement;
     }
   },
   methods: {
+    openEdit() {},
     closeForms() {
       this.addressFound = false;
       this.$emit("close-editing");
@@ -217,6 +220,7 @@ export default {
       this.$emit(this.usage, newAddress);
 
       // resetting form to initial state
+      this.closeForms();
       this.title = this.zipCode = this.state = this.city = this.neighborhood = this.street = this.number = this.complemen =
         "";
       this.addressFound = false;
