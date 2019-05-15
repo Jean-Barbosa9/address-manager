@@ -13,6 +13,7 @@
 <script>
 // Dependencies
 import { mapGetters, mapActions } from "vuex";
+import "firebase/firestore";
 
 // Components importings
 import NewAddress from "../components/NewAddress";
@@ -28,8 +29,11 @@ export default {
     Addresses
   },
   computed: mapGetters(["allAddresses", "editingAddress", "alert"]),
+  created() {
+    this.test(this.$firebase.firestore());
+  },
   methods: {
-    ...mapActions(["willEdit"]),
+    ...mapActions(["willEdit", "test"]),
     openEditing(address) {
       this.willEdit(address);
       this.isEditing = true;
