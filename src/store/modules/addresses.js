@@ -52,7 +52,8 @@ const state = {
       number: "500",
       complement: "Bloco 6 2º piso"
     }
-  ]
+  ],
+  teste: ""
 };
 
 const getters = {
@@ -81,6 +82,9 @@ const actions = {
   },
   saveAddress({ commit }, message) {
     commit("localSave", message);
+  },
+  test({ commit }, data) {
+    commit("testing", data);
   }
 };
 
@@ -112,7 +116,8 @@ const mutations = {
         message: ""
       };
     }, 2000);
-  }
+  },
+  testing: (state, data) => (state.teste = data)
 };
 
 export default {
