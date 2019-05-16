@@ -14,11 +14,20 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarMain">
         <ul class="navbar-nav container-fluid align-items-end">
-          <li class="nav-item">
+          <li v-if="!isAuthenicated" class="nav-item">
+            <router-link to="/login" class="nav-link text-primary">Logar</router-link>
+          </li>
+          <li v-if="!isAuthenicated" class="nav-item">
+            <router-link to="/cadastro" class="nav-link text-primary">Cadastrar</router-link>
+          </li>
+          <li v-if="isAuthenicated" class="nav-item">
             <router-link to="/" class="nav-link">Home</router-link>
           </li>
-          <li class="nav-item">
+          <li v-if="isAuthenicated" class="nav-item">
             <router-link to="/about" class="nav-link">Sobre a aplicação</router-link>
+          </li>
+          <li v-if="isAuthenicated" class="nav-item">
+            <span @click="logout" class="nav-link text-primary">Deslogar</span>
           </li>
         </ul>
       </div>
@@ -27,8 +36,14 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
-  name: "Header"
+  name: "Header",
+  computed: mapGetters(["isAuthenicated"]),
+  methods: {
+    ...mapActions(["logout"])
+  }
 };
 </script>
 
