@@ -42,8 +42,9 @@ export default {
     ...mapGetters(["alert", "email"])
   },
   mounted() {
+    const regex = /compartilhado/;
     this.$store.subscribe((mutation, state) => {
-      if (mutation.type == "logoff") {
+      if (mutation.type == "logoff" && !regex.test(this.$route.path)) {
         this.$router.push("/sobre");
       } else if (mutation.type == "signUser") {
         if (this.$route.path === "/login" || this.$route.path === "/cadastro") {
