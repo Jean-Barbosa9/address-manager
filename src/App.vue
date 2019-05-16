@@ -36,6 +36,7 @@ export default {
 body {
   font-family: $font-family-base;
   line-height: 1.4;
+  overflow-x: hidden;
 }
 
 .logo {
@@ -115,7 +116,6 @@ body {
 @media screen and (min-width: 1025px) {
   .app-title {
     font-size: 2.5em;
-    flex-basis: 100%;
   }
 
   .title {
