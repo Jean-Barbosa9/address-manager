@@ -1,4 +1,6 @@
 import Home from "./views/Home.vue";
+import Login from "./views/Login.vue";
+import Register from "./views/Register.vue";
 import EditAddress from "./views/EditAddress.vue";
 import Directions from "./views/Directions.vue";
 import About from "./views/About.vue";
@@ -9,6 +11,16 @@ const routes = [
     path: "/",
     name: "home",
     component: Home
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: Login
+  },
+  {
+    path: "/cadastro",
+    name: "register",
+    component: Register
   },
   {
     path: "/edit/:id",
