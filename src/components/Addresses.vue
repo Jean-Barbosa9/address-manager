@@ -1,7 +1,7 @@
 <template>
   <div class="addresses card" v-if="this.allAddresses.length > 0">
     <div class="card-header">
-      <h4 class="title-2 mb-0 d-inline-block">Endereços salvos</h4>
+      <h4 class="title-2 mb-0 d-inline-block">Seu endereços salvos</h4>
       <button
         type="button"
         class="d-none btn btn-darker px-3 py-2 float-right"
@@ -47,13 +47,23 @@
 
 <script>
 import AddressItem from "./AddressItem.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   name: "Addresses",
-  computed: mapGetters(["allAddresses"]),
-  created() {
-    if (localStorage.addresses) this.fetchAddresses();
+  computed: {
+    ...mapGetters(["allAddresses"]),
+    ...mapState(["email"])
+  },
+  mounted() {
+    this.$store.watch(
+      (state, getters) => getters.email,
+      (newValue, oldValue) => {
+        if (newValue != null) {
+          this.fetchAddresses(newValue);
+        }
+      }
+    );
   },
   data() {
     return {
@@ -69,7 +79,7 @@ export default {
     AddressItem
   },
   methods: {
-    ...mapActions(["fetchAddresses", "deleteAddress", "saveAddress"]),
+    ...mapActions(["deleteAddress", "saveAddress", "fetchAddresses"]),
     showLoading(payload) {
       if (payload && !this.loading) {
         this.loading = true;
@@ -79,7 +89,6 @@ export default {
     },
     delAddress() {
       this.deleteAddress(this.willDelete.id);
-      this.saveAddress("Endereço deletado com sucesso!");
     },
     showDeleteModal(address) {
       this.willDelete = {
