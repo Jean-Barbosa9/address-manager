@@ -1,11 +1,6 @@
 <template>
   <div>
     <NewAddress/>
-    <span
-      class="alert position-fixed centered"
-      v-if="this.alert.type !== null"
-      v-bind:class="{'alert-danger':this.alert.type == 'error', 'alert-success':this.alert.type == 'success',}"
-    >{{alert.message}}</span>
     <Addresses v-bind:addresses="allAddresses" v-on:open-editing="openEditing"/>
   </div>
 </template>
