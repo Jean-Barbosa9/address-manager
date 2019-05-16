@@ -101,10 +101,6 @@ export default {
     }
   },
   methods: {
-    teste() {
-      console.log(this.$route);
-      this.$router.path = "/edit/1";
-    },
     loadDetails() {
       this.$emit("loading", !this.show);
       this.showDetails();
