@@ -10,6 +10,7 @@ const state = {
   },
   editingAddress: {
     id: null,
+    createdBy: null,
     title: "",
     zipCode: "",
     city: "",
@@ -75,39 +76,36 @@ const actions = {
       .firestore()
       .collection("addresses")
       .where("createdBy", "==", user);
-    userAddresses
-      .orderBy("title")
-      .get()
-      .then(querySnapshot => {
-        const userSycedAddresses = [];
-        querySnapshot.forEach(doc => {
-          const {
-            createdBy,
-            title,
-            zipCode,
-            city,
-            state,
-            street,
-            neighborhood,
-            number,
-            complement
-          } = doc.data();
+    userAddresses.get().then(querySnapshot => {
+      const userSycedAddresses = [];
+      querySnapshot.forEach(doc => {
+        const {
+          createdBy,
+          title,
+          zipCode,
+          city,
+          state,
+          street,
+          neighborhood,
+          number,
+          complement
+        } = doc.data();
 
-          userSycedAddresses.push({
-            id: doc.id,
-            createdBy,
-            title,
-            zipCode,
-            city,
-            state,
-            street,
-            neighborhood,
-            number,
-            complement
-          });
+        userSycedAddresses.push({
+          id: doc.id,
+          createdBy,
+          title,
+          zipCode,
+          city,
+          state,
+          street,
+          neighborhood,
+          number,
+          complement
         });
-        commit("setAddresses", userSycedAddresses);
       });
+      commit("setAddresses", userSycedAddresses);
+    });
   },
   willEdit({ commit }, id) {
     commit("setEditAddress", id);
@@ -122,12 +120,14 @@ const actions = {
     commit("newAddress", address);
   },
   editAddress({ commit }, payload) {
+    console.log(payload);
     firebase
       .firestore()
       .collection("addresses")
       .doc(payload.id)
       .update(payload)
       .then(res => {
+        console.log("res: ", res);
         commit("addressChanged", payload);
         commit("alert", {
           type: "success",
@@ -136,6 +136,8 @@ const actions = {
         });
       })
       .catch(error => {
+        console.log("error: ", error);
+
         commit("alert", {
           type: "error",
           message: "Você não tem permissão para alterar este registro",
