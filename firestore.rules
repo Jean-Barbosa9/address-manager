@@ -3,7 +3,9 @@ service cloud.firestore {
     match /addresses/{document=**} {
     	allow read;
       allow create: if request.auth.uid != null;
-      allow update, delete: if request.auth.uid == userId;
+    }
+    match /addresses/{createdBy} {
+      allow update, delete: if request.auth.email == createdBy;
     }
   }
 }
