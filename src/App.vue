@@ -5,6 +5,11 @@
       <router-view/>
     </div>
     <Footer/>
+    <span
+      class="alert position-fixed centered"
+      v-if="this.alert.type !== null"
+      v-bind:class="{'alert-danger':this.alert.type == 'error', 'alert-success':this.alert.type == 'success',}"
+    >{{alert.message}}</span>
   </div>
 </template>
 
@@ -17,7 +22,7 @@ import Footer from "./components/layouts/Footer";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 import firebase from "firebase/app";
-import { mapActions, mapState, mapMutations } from "vuex";
+import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "app",
@@ -33,12 +38,13 @@ export default {
   },
   computed: {
     ...mapState(["isAuthenicated"]),
-    ...mapMutations(["signUser"])
+    ...mapMutations(["signUser"]),
+    ...mapGetters(["alert", "email"])
   },
   mounted() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type == "logoff") {
-        this.$router.push("/login");
+        this.$router.push("/sobre");
       } else if (mutation.type == "signUser") {
         if (this.$route.path === "/login" || this.$route.path === "/cadastro") {
           this.$router.push("/");
