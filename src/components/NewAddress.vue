@@ -7,18 +7,21 @@
 
 <script>
 import AddressForm from "./layouts/AddressForm";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "AddAddress",
   components: {
     AddressForm
   },
+  computed: {
+    ...mapGetters(["email"])
+  },
   methods: {
-    ...mapActions(["addAddress", "saveAddress"]),
+    ...mapActions(["addAddress"]),
     handleAddress(address) {
+      address.createdBy = this.email;
       this.addAddress(address);
-      this.saveAddress("Endereço adicionado com sucesso");
     }
   }
 };
