@@ -125,7 +125,6 @@ export default {
         number,
         complement
       } = this.editingAddress[0];
-      console.log("this.editingAddress: ", this.editingAddress);
       this.addressFound = true;
       this.id = id;
       this.title = title;
