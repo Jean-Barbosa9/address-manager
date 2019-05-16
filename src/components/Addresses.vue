@@ -55,9 +55,12 @@ export default {
     ...mapGetters(["allAddresses"]),
     ...mapState(["email"])
   },
+  created() {
+    this.fetchAddresses(this.user.email);
+  },
   mounted() {
     this.$store.watch(
-      (state, getters) => getters.email,
+      (state, getters) => (this.user.email = getters.email),
       (newValue, oldValue) => {
         if (newValue != null) {
           this.fetchAddresses(newValue);
@@ -72,6 +75,9 @@ export default {
         status: false,
         id: "",
         title: ""
+      },
+      user: {
+        email: null
       }
     };
   },
