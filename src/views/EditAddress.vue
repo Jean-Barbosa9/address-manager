@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import AddressForm from "../components/AddressForm";
+import AddressForm from "../components/layouts/AddressForm";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -19,17 +19,15 @@ export default {
   props: ["address"],
   computed: mapGetters(["editingAddress"]),
   created() {
-    console.log("this.$route.history.params.id: ", this.$route.params.id);
     this.willEdit(this.$route.params.id);
   },
   components: {
     AddressForm
   },
   methods: {
-    ...mapActions(["editAddress", "willEdit", "saveAddress"]),
+    ...mapActions(["editAddress", "willEdit"]),
     handleAddress(address) {
       this.editAddress(address);
-      this.saveAddress("Endereço alterado com sucesso!");
     }
   }
 };

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import AddressForm from "./AddressForm";
+import AddressForm from "./layouts/AddressForm";
 import { mapActions } from "vuex";
 
 export default {
