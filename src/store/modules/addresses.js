@@ -149,13 +149,18 @@ const actions = {
     firebase
       .firestore()
       .collection("addresses")
-      .where("id", "==", id)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          doc.ref.delete();
-        });
+      .doc(id)
+      .delete()
+      .then(res => {
         commit("addressRemoved", id);
+        commit("alert", {
+          type: "success",
+          message: "Endereço removido com sucesso",
+          timeout: 5000
+        });
+      })
+      .catch(error => {
+        console.log("error: ", error);
       });
   },
   saveAddress({ commit }, message) {
