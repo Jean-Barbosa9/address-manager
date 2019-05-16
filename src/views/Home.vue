@@ -29,42 +29,8 @@ export default {
     Addresses
   },
   computed: mapGetters(["allAddresses", "editingAddress", "alert"]),
-  created() {
-    const fsAddresses = []; // entrará como data do componente que fará a consulta no firestore
-    //Método para consultar os dados no firebase
-    this.$firestore
-      .collection("addresses")
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          const {
-            zipCode,
-            title,
-            city,
-            state,
-            neighborhood,
-            street,
-            number,
-            complement
-          } = doc.data();
-          const data = {
-            id: doc.id,
-            zipCode,
-            title,
-            city,
-            state,
-            neighborhood,
-            street,
-            number,
-            complement
-          };
-          fsAddresses.push(data);
-        });
-        console.log("fsAddresses: ", fsAddresses);
-      });
-  },
   methods: {
-    ...mapActions(["willEdit", "test"]),
+    ...mapActions(["willEdit"]),
     openEditing(address) {
       this.willEdit(address);
       this.isEditing = true;
