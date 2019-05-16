@@ -28,12 +28,12 @@ const routes = [
     component: EditAddress
   },
   {
-    path: "/directions/:id",
+    path: "/endereco/:id",
     name: "directions",
     component: Directions
   },
   {
-    path: "/about",
+    path: "/sobre",
     name: "about",
     component: About
   },
