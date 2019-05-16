@@ -114,7 +114,7 @@ const actions = {
   },
   addAddress({ commit }, address) {
     // address.id = uuid.v4();
-    firebase
+    address.createdBy = firebase
       .firestore()
       .collection("addresses")
       .doc()
@@ -126,7 +126,7 @@ const actions = {
       .firestore()
       .collection("addresses")
       .doc(payload.id)
-      .set(payload)
+      .update(payload)
       .then(res => {
         commit("addressChanged", payload);
         commit("alert", {
@@ -138,7 +138,7 @@ const actions = {
       .catch(error => {
         commit("alert", {
           type: "error",
-          message: error,
+          message: "Você não tem permissão para alterar este registro",
           timeout: 5000
         });
       });
