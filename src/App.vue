@@ -16,11 +16,35 @@ import Footer from "./components/layouts/Footer";
 // Using bootstrap
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
+import firebase from "firebase/app";
+import { mapActions, mapState, mapMutations } from "vuex";
+
 export default {
   name: "app",
   components: {
     Header,
     Footer
+  },
+  created() {
+    this.watchUserAuth();
+  },
+  methods: {
+    ...mapActions(["watchUserAuth"])
+  },
+  computed: {
+    ...mapState(["isAuthenicated"]),
+    ...mapMutations(["signUser"])
+  },
+  mounted() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type == "logoff") {
+        this.$router.push("/login");
+      } else if (mutation.type == "signUser") {
+        if (this.$route.path === "/login" || this.$route.path === "/cadastro") {
+          this.$router.push("/");
+        }
+      }
+    });
   }
 };
 </script>
@@ -73,6 +97,10 @@ body {
   &-3 {
     font-size: 0.8em;
   }
+}
+
+.nav-link {
+  cursor: pointer;
 }
 
 .centered {
