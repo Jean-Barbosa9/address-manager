@@ -102,6 +102,7 @@ export default {
       addressFound: false,
       errorMessage: "",
       id: "",
+      createdBy: null,
       title: "",
       zipCode: "",
       state: "",
@@ -116,6 +117,7 @@ export default {
     if (this.usage == "edit-address") {
       const {
         id,
+        createdBy,
         title,
         zipCode,
         state,
@@ -127,6 +129,7 @@ export default {
       } = this.editingAddress[0];
       this.addressFound = true;
       this.id = id;
+      this.createdBy = createdBy;
       this.title = title;
       this.zipCode = zipCode;
       this.state = state;
