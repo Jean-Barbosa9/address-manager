@@ -18,7 +18,10 @@
         class="btn btn-dark"
       >
         <i class="fas fa-route"/>
-      </span> que estará no card com os detalhes do endereço.
+      </span> que estará no card com os detalhes do endereço ou ainda compartilhar sua lista de endereços ao clicar no botão
+      <span class="btn btn-darker border-dark">
+        <i class="fas fa-share-alt"/>
+      </span> que fica ao lado do título da lista, para obter o link.
     </p>
     <p>
       Você pode visualizar o código fonte deste projeto apenas clicando no ícone do GitHub
