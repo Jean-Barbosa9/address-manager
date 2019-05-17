@@ -113,33 +113,35 @@ const actions = {
     commit("setEditAddress", id);
   },
   addAddress({ commit }, address) {
-    // address.id = uuid.v4();
     address.createdBy = firebase
       .firestore()
       .collection("addresses")
       .doc()
-      .set(address);
+      .set(address)
+      .then(res => {
+        commit("alert", {
+          type: "success",
+          message: "Endereço adicionado com sucesso",
+          timeout: 1500
+        });
+      });
     commit("newAddress", address);
   },
   editAddress({ commit }, payload) {
-    console.log(payload);
     firebase
       .firestore()
       .collection("addresses")
       .doc(payload.id)
       .update(payload)
       .then(res => {
-        console.log("res: ", res);
         commit("addressChanged", payload);
         commit("alert", {
           type: "success",
           message: "Endereço atualizado com sucesso!",
-          timeout: 2000
+          timeout: 1500
         });
       })
       .catch(error => {
-        console.log("error: ", error);
-
         commit("alert", {
           type: "error",
           message: "Você não tem permissão para alterar este registro",
@@ -158,11 +160,15 @@ const actions = {
         commit("alert", {
           type: "success",
           message: "Endereço removido com sucesso",
-          timeout: 5000
+          timeout: 1500
         });
       })
       .catch(error => {
-        console.log("error: ", error);
+        commit("alert", {
+          type: "error",
+          message: "Você não tem permissão para excluir este endereço",
+          timeout: 5000
+        });
       });
   },
   saveAddress({ commit }, message) {
