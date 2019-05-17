@@ -4,12 +4,14 @@
 
 https://address-manager-3e841.firebaseapp.com/
 
-## Application features
+## Application features | v3.0.0
 
+- Authenication with email and password using Firebase APIs
 - Search for the address as soon as the zip code is fulfilled;
 - If zip code is wrong, returns an info message about the error;
-- Saves addresses into browsers memory, allowing persitance after page reloads.
+- Saves addresses list into Firestore (Firebase Cloud Database), allowing data persitance;
 - CRUD actions;
+- Possibility to share addresses by link
 
 ## Project setup
 
