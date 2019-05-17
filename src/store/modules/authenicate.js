@@ -4,13 +4,17 @@ import "firebase/firestore";
 
 const state = {
   isAuthenicated: false,
-  email: null,
+  user: {
+    uid: null,
+    email: null
+  },
   redirectTo: null
 };
 
 const getters = {
   isAuthenicated: state => state.isAuthenicated,
-  email: state => state.email,
+  email: state => state.user.email,
+  uid: state => state.user.uid,
   redirectTo: state => state.redirectTo
 };
 
@@ -52,6 +56,7 @@ const actions = {
   watchUserAuth({ commit }) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        console.log("user: ", user);
         commit("signUser", user);
       } else {
         commit("logoff");
@@ -80,12 +85,12 @@ const actions = {
 
 const mutations = {
   signUser: (state, userData) => {
-    state.email = userData.email;
+    state.user = { email: userData.email, uid: userData.uid };
     state.isAuthenicated = true;
   },
   logoff: state => {
     state.isAuthenicated = false;
-    state.email = null;
+    state.user = { email: null, uid: null };
   },
   redirectTo: (state, route) => (state.redirectTo = route),
   alert: (state, alert) => {
