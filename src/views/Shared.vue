@@ -1,19 +1,13 @@
-<template></template>
+<template>
+  <Addresses usage="shared-addresses"/>
+</template>
 
 <script>
-import { mapActions } from "vuex";
+import Addresses from "../components/Addresses";
 export default {
   name: "Shared",
-  created() {
-    this.fetchSharedAddresses(btoa(this.$route.params.id));
-  },
-  methods: {
-    ...mapActions(["fetchSharedAddresses"])
-  },
-  data() {
-    return {
-      sharedAddresses: []
-    };
+  components: {
+    Addresses
   }
 };
 </script>
