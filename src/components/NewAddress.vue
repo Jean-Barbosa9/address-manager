@@ -15,13 +15,21 @@ export default {
     AddressForm
   },
   computed: {
-    ...mapGetters(["email"])
+    ...mapGetters(["uid", "isAuthenicated"])
   },
   methods: {
-    ...mapActions(["addAddress"]),
+    ...mapActions(["addAddress", "showAlert"]),
     handleAddress(address) {
-      address.createdBy = this.email;
-      this.addAddress(address);
+      if (!this.isAuthenicated) {
+        this.showAlert({
+          type: "error",
+          message: "Para criar novos endereços, você precisa estar logado",
+          timeout: 5000
+        });
+      } else {
+        address.createdBy = this.uid;
+        this.addAddress(address);
+      }
     }
   }
 };
