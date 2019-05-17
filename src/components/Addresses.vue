@@ -1,8 +1,12 @@
 <template>
-  <div class="addresses card" v-if="this.allAddresses.length > 0">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="title-2">Seu endereços salvos</h4>
+  <div class="addresses card" v-bind:usage="usage" v-if="allAddresses.length > 0">
+    <div
+      class="card-header d-flex align-items-center"
+      v-bind:class="{'justify-content-between':shareButton, 'justify-content-center':!shareButton}"
+    >
+      <h4 class="title-2">{{listTitle}}</h4>
       <button
+        v-if="shareButton"
         type="button"
         class="btn btn-darker border-dark px-3 py-2 float-right"
         title="Compartilhar lista de endereços"
@@ -12,7 +16,7 @@
         compartilhar
       </button>
     </div>
-    <strong v-if="userShareLink" class="text-center p-3 text-dark">
+    <strong v-if="userShareLink && shareButton" class="text-center p-3 text-dark">
       Compartilhe sua lista:
       <router-link :to="userShareLink">{{hostname}}{{userShareLink}}</router-link>
     </strong>
@@ -57,9 +61,16 @@ import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   name: "Addresses",
+  props: ["usage"],
   computed: {
     ...mapGetters(["allAddresses", "linkToShare"]),
     ...mapState(["uid"])
+  },
+  created() {
+    if (this.usage == "shared-addresses") {
+      this.fetchSharedAddresses(atob(this.$route.params.id));
+      this.listTitle = "Lista compartilhada comigo";
+    }
   },
   mounted() {
     this.userShareLink = this.linkToShare;
@@ -68,13 +79,19 @@ export default {
       (state, getters) => (this.userId = getters.uid),
       (newValue, oldValue) => {
         if (newValue != null) {
-          this.fetchAddresses(newValue);
+          if (this.usage == "my-addresses") {
+            this.fetchAddresses(newValue);
+            this.listTitle = "Seus endereços salvos";
+            this.shareButton = true;
+          }
         }
       }
     );
   },
   data() {
     return {
+      listTitle: "",
+      shareButton: false,
       loading: false,
       willDelete: {
         status: false,
@@ -94,6 +111,7 @@ export default {
       "deleteAddress",
       "saveAddress",
       "fetchAddresses",
+      "fetchSharedAddresses",
       "shareLink"
     ]),
     showLoading(payload) {
@@ -115,7 +133,6 @@ export default {
       this.$emit("close-editing");
     },
     shareAddresses() {
-      console.log("share addresses: ", this.userId);
       this.userShareLink = `compartilhado/${btoa(this.userId)}`;
       this.shareLink(this.userShareLink);
     }
