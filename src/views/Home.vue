@@ -1,7 +1,7 @@
 <template>
   <div>
     <NewAddress/>
-    <Addresses v-bind:addresses="allAddresses" v-on:open-editing="openEditing"/>
+    <Addresses usage="my-addresses" v-on:open-editing="openEditing"/>
   </div>
 </template>
 
