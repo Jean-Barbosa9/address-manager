@@ -23,7 +23,7 @@
           <li v-if="isAuthenicated" class="nav-item">
             <router-link to="/" class="nav-link">Home</router-link>
           </li>
-          <li v-if="isAuthenicated" class="nav-item">
+          <li class="nav-item">
             <router-link to="/sobre" class="nav-link">Sobre a aplicação</router-link>
           </li>
           <li v-if="isAuthenicated" class="nav-item">
