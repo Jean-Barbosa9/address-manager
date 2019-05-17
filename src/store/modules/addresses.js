@@ -8,6 +8,7 @@ const state = {
     message: "",
     timeout: null
   },
+  linkToShare: "",
   editingAddress: {
     id: null,
     createdBy: null,
@@ -63,7 +64,8 @@ const state = {
 const getters = {
   alert: state => state.alert,
   allAddresses: state => state.addresses,
-  editingAddress: state => state.editingAddress
+  editingAddress: state => state.editingAddress,
+  linkToShare: state => state.linkToShare
 };
 
 const actions = {
@@ -71,11 +73,11 @@ const actions = {
     const localAddresses = JSON.parse(atob(localStorage.addresses));
     commit("setAddresses", localAddresses);
   },
-  fetchAddresses({ commit }, user) {
+  fetchAddresses({ commit }, uid) {
     const userAddresses = firebase
       .firestore()
       .collection("addresses")
-      .where("createdBy", "==", user);
+      .where("createdBy", "==", uid);
     userAddresses.get().then(querySnapshot => {
       const userSycedAddresses = [];
       querySnapshot.forEach(doc => {
@@ -165,6 +167,45 @@ const actions = {
   },
   saveAddress({ commit }, message) {
     commit("localSave", message);
+  },
+  shareLink({ commit }, link) {
+    commit("hasLink", link);
+  },
+  fetchSharedAddresses({ commit }, uid) {
+    const userAddresses = firebase
+      .firestore()
+      .collection("addresses")
+      .where("createdBy", "==", uid);
+    userAddresses.get().then(querySnapshot => {
+      const sharedWithMe = [];
+      querySnapshot.forEach(doc => {
+        const {
+          createdBy,
+          title,
+          zipCode,
+          city,
+          state,
+          street,
+          neighborhood,
+          number,
+          complement
+        } = doc.data();
+
+        sharedWithMe.push({
+          id: doc.id,
+          createdBy,
+          title,
+          zipCode,
+          city,
+          state,
+          street,
+          neighborhood,
+          number,
+          complement
+        });
+      });
+      commit("setAddresses", sharedWithMe);
+    });
   }
 };
 
@@ -200,7 +241,8 @@ const mutations = {
         message: ""
       };
     }, alert.timeout);
-  }
+  },
+  hasLink: (state, link) => (state.linkToShare = link)
 };
 
 export default {
