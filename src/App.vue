@@ -39,7 +39,7 @@ export default {
   computed: {
     ...mapState(["isAuthenicated"]),
     ...mapMutations(["signUser"]),
-    ...mapGetters(["alert", "email"])
+    ...mapGetters(["alert"])
   },
   mounted() {
     const regex = /compartilhado/;
