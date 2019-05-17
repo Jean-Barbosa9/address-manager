@@ -3,6 +3,7 @@ import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import EditAddress from "./views/EditAddress.vue";
 import Directions from "./views/Directions.vue";
+import Shared from "./views/Shared.vue";
 import About from "./views/About.vue";
 import NotFound from "./views/NotFound.vue";
 
@@ -26,6 +27,11 @@ const routes = [
     path: "/edit/:id",
     name: "edit",
     component: EditAddress
+  },
+  {
+    path: "/compartilhado/:id",
+    name: "shared",
+    component: Shared
   },
   {
     path: "/endereco/:id",
