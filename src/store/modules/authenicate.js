@@ -56,7 +56,6 @@ const actions = {
   watchUserAuth({ commit }) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log("user: ", user);
         commit("signUser", user);
       } else {
         commit("logoff");
@@ -80,6 +79,9 @@ const actions = {
   },
   redirect({ commit }, route) {
     commit("redirectTo", route);
+  },
+  showAlert({ commit }, alert) {
+    commit("alert", alert);
   }
 };
 
