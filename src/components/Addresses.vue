@@ -1,15 +1,21 @@
 <template>
   <div class="addresses card" v-if="this.allAddresses.length > 0">
-    <div class="card-header">
-      <h4 class="title-2 mb-0 d-inline-block">Seu endereços salvos</h4>
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="title-2">Seu endereços salvos</h4>
       <button
         type="button"
-        class="d-none btn btn-darker px-3 py-2 float-right"
+        class="btn btn-darker border-dark px-3 py-2 float-right"
         title="Compartilhar lista de endereços"
+        @click="shareAddresses"
       >
         <i class="fas fa-share-alt"></i>
+        compartilhar
       </button>
     </div>
+    <strong v-if="userShareLink" class="text-center p-3 text-dark">
+      Compartilhe sua lista:
+      <router-link :to="userShareLink">{{hostname}}{{userShareLink}}</router-link>
+    </strong>
     <div class="card-body row">
       <div class="address col-sm" v-for="address in this.allAddresses" :key="address.id">
         <AddressItem
@@ -52,12 +58,14 @@ import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   name: "Addresses",
   computed: {
-    ...mapGetters(["allAddresses"]),
-    ...mapState(["email"])
+    ...mapGetters(["allAddresses", "linkToShare"]),
+    ...mapState(["uid"])
   },
   mounted() {
+    this.userShareLink = this.linkToShare;
+    this.hostname = location.href;
     this.$store.watch(
-      (state, getters) => getters.email,
+      (state, getters) => (this.userId = getters.uid),
       (newValue, oldValue) => {
         if (newValue != null) {
           this.fetchAddresses(newValue);
@@ -72,14 +80,22 @@ export default {
         status: false,
         id: "",
         title: ""
-      }
+      },
+      hostname: "",
+      userShareLink: null,
+      userId: null
     };
   },
   components: {
     AddressItem
   },
   methods: {
-    ...mapActions(["deleteAddress", "saveAddress", "fetchAddresses"]),
+    ...mapActions([
+      "deleteAddress",
+      "saveAddress",
+      "fetchAddresses",
+      "shareLink"
+    ]),
     showLoading(payload) {
       if (payload && !this.loading) {
         this.loading = true;
@@ -97,6 +113,11 @@ export default {
         title: address.title
       };
       this.$emit("close-editing");
+    },
+    shareAddresses() {
+      console.log("share addresses: ", this.userId);
+      this.userShareLink = `compartilhado/${btoa(this.userId)}`;
+      this.shareLink(this.userShareLink);
     }
   }
 };
